@@ -25,7 +25,7 @@ if (props.rarity == "bd") {
 <template>
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 156 156">
         <image
-            :href="`https://snowyassets.exmeaning.com/startapp/thumbnail/chara/${img}.png`"
+            :href="`https://storage.exmeaning.com/sekai-jp-assets/thumbnail/chara/${img}.png`"
             x="8"
             y="8"
             height="140"

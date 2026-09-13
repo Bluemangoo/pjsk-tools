@@ -14,53 +14,53 @@ function generateIconCSS({
 
     for (let i = 1; i <= 225; i++) {
         icons[`material${i}`] =
-            `https://snowyassets.exmeaning.com/startapp/thumbnail/material/material${i}.png`;
+            `https://storage.exmeaning.com/sekai-jp-assets/thumbnail/material/material${i}.png`;
     }
     for (let i = 1; i <= 225; i++) {
         icons[`material-bare${i}`] =
-            `https://snowyassets.exmeaning.com/ondemand/mysekai/item_preview/material/material${i}.png`;
+            `https://storage.exmeaning.com/sekai-jp-assets/ondemand/mysekai/item_preview/material/material${i}.png`;
     }
     for (let i = 1; i <= 27; i++) {
         icons[`boost-item${i}`] =
-            `https://snowyassets.exmeaning.com/startapp/thumbnail/boost_item/boost_item${i}.png`;
+            `https://storage.exmeaning.com/sekai-jp-assets/thumbnail/boost_item/boost_item${i}.png`;
     }
     for (let i = 1; i <= 916; i++) {
         icons[`gacha-logo${i}`] =
-            `https://snowyassets.exmeaning.com/startapp/gacha/ab_gacha_${i}/logo/logo.png`;
+            `https://storage.exmeaning.com/sekai-jp-assets/gacha/ab_gacha_${i}/logo/logo.png`;
         icons[`gacha-banner${i}`] =
-            `https://snowyassets.exmeaning.com/startapp/home/banner/banner_gacha${i}/banner_gacha${i}.png`;
+            `https://storage.exmeaning.com/sekai-jp-assets/home/banner/banner_gacha${i}/banner_gacha${i}.png`;
     }
     for (let i = 1; i <= 4; i++) {
         icons[`skill-practice-ticket${i}`] =
-            `https://snowyassets.exmeaning.com/startapp/thumbnail/skill_practice_ticket/ticket${i}.png`;
+            `https://storage.exmeaning.com/sekai-jp-assets/thumbnail/skill_practice_ticket/ticket${i}.png`;
     }
     for (let i = 1; i <= 4; i++) {
         icons[`practice-ticket${i}`] =
-            `https://snowyassets.exmeaning.com/startapp/thumbnail/practice_ticket/ticket${i}.png`;
+            `https://storage.exmeaning.com/sekai-jp-assets/thumbnail/practice_ticket/ticket${i}.png`;
     }
     icons["heartcrystal-bare"] =
-        "https://snowyassets.exmeaning.com/startapp/thumbnail/common_event/heart/icon_heartcrystal.png";
+        "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/common_event/heart/icon_heartcrystal.png";
     icons["heartpiece-bare"] =
-        "https://snowyassets.exmeaning.com/startapp/thumbnail/common_event/heart/icon_heartpiece.png";
+        "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/common_event/heart/icon_heartpiece.png";
     icons["coinset"] =
-        "https://snowyassets.exmeaning.com/startapp/thumbnail/material_exchange/item_gr_coinset.png";
+        "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/material_exchange/item_gr_coinset.png";
     icons["coinsmallset"] =
-        "https://snowyassets.exmeaning.com/startapp/thumbnail/material_exchange/item_gr_coinsmallset.png";
+        "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/material_exchange/item_gr_coinsmallset.png";
     icons["jewel"] =
-        "https://snowyassets.exmeaning.com/startapp/thumbnail/common_material/jewel.png";
+        "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/common_material/jewel.png";
     icons["virtual-coin"] =
-        "https://snowyassets.exmeaning.com/startapp/thumbnail/common_material/virtual_coin.png";
-    icons["coin"] = "https://snowyassets.exmeaning.com/startapp/thumbnail/common_material/coin.png";
+        "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/common_material/virtual_coin.png";
+    icons["coin"] = "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/common_material/coin.png";
     icons["gacha-ticket"] =
-        "https://snowyassets.exmeaning.com/startapp/thumbnail/gacha_ticket/gacha_ticket.png";
+        "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/gacha_ticket/gacha_ticket.png";
     icons["gacha-ticket-cn-free"] =
-        "https://snowyassets.exmeaning.com/startapp/thumbnail/gacha_ticket/gacha_ticket_cn_free.png";
+        "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/gacha_ticket/gacha_ticket_cn_free.png";
     icons["gacha-ticket-star4"] =
-        "https://snowyassets.exmeaning.com/startapp/thumbnail/gacha_ticket/gacha_ticket_star4.png";
+        "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/gacha_ticket/gacha_ticket_star4.png";
     for (const name of ["shiho"]) {
         for (let i = 1; i <= 4; i++) {
             icons[`eventbadge-${name}${i}`] =
-                `https://snowyassets.exmeaning.com/startapp/thumbnail/common_event/badge_${name}/icon_eventbadge_${i}.png`;
+                `https://storage.exmeaning.com/sekai-jp-assets/thumbnail/common_event/badge_${name}/icon_eventbadge_${i}.png`;
         }
     }
 

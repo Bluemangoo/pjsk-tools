@@ -19,11 +19,11 @@ import aJump from "@/utils/a-jump.ts";
                     <div
                         class="h-10 w-[6.1rem] bg-miku transition-colors"
                         style="
-                            mask-image: url(https://assets.exmeaning.com/SnowyBot/logo.svg);
+                            mask-image: url(https://moe.exmeaning.com/assets/logo.svg);
                             mask-size: contain;
                             mask-position: center;
                             mask-repeat: no-repeat;
-                            -webkit-mask-image: url(https://assets.exmeaning.com/SnowyBot/logo.svg);
+                            -webkit-mask-image: url(https://moe.exmeaning.com/assets/logo.svg);
                             -webkit-mask-size: contain;
                             -webkit-mask-position: center;
                             -webkit-mask-repeat: no-repeat;

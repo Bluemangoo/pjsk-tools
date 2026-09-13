@@ -1,7 +1,7 @@
-import { watchEffect } from "vue";
-import { useStorage } from "@vueuse/core";
+import { ref, watchEffect } from "vue";
 
-export const isDark = useStorage("theme-dark", false);
+const storedTheme = typeof window !== "undefined" ? localStorage.getItem("theme-dark") : null;
+export const isDark = ref(storedTheme !== null ? JSON.parse(storedTheme) : false);
 
 export function toggleDark() {
     isDark.value = !isDark.value;
@@ -9,6 +9,10 @@ export function toggleDark() {
 
 watchEffect(() => {
     if (typeof window !== "undefined") {
+        // 同步持久化到 localStorage
+        localStorage.setItem("theme-dark", JSON.stringify(isDark.value));
+
+        // 切换 html 上的 dark 类
         if (isDark.value) {
             document.documentElement.classList.add("dark");
         } else {

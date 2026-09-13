@@ -15,11 +15,11 @@ import PartH2 from "@/components/parts/part-h2.vue";
                     <div
                         class="h-16 w-56 sm:h-20 sm:w-80 lg:h-24 lg:w-96 bg-linear-to-r from-miku to-miku-dark transition-all hover:brightness-110 drop-shadow-md dark:drop-shadow-[0_0_15px_rgba(51,204,187,0.3)]"
                         style="
-                            mask-image: url(https://assets.exmeaning.com/SnowyBot/logo.svg);
+                            mask-image: url(https://moe.exmeaning.com/assets/logo.svg);
                             mask-size: contain;
                             mask-position: center;
                             mask-repeat: no-repeat;
-                            -webkit-mask-image: url(https://assets.exmeaning.com/SnowyBot/logo.svg);
+                            -webkit-mask-image: url(https://moe.exmeaning.com/assets/logo.svg);
                             -webkit-mask-size: contain;
                             -webkit-mask-position: center;
                             -webkit-mask-repeat: no-repeat;
