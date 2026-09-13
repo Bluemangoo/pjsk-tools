@@ -1,0 +1,528 @@
+import type { FixedLengthArray } from "@/types/typeConstraints.ts";
+
+type Rewards = {
+    redDrip?: number;
+    blueDrip?: number;
+    purpleDrip?: number;
+    rainbowP?: number;
+    rainbowMelody?: number;
+    gachaFree?: number;
+    jewel?: number;
+    drink?: number;
+    drinkL?: number;
+    material127?: number; // Leo/need 心愿碎片
+    material128?: number; // MORE MORE JUMP! 心愿碎片
+    material129?: number; // Vivid BAD SQUAD 心愿碎片
+    material130?: number; // Wonderlands×Showtime 心愿碎片
+    material131?: number; // 25-ji, Nightcord de. 心愿碎片
+    material132?: number; // VIRTUAL SINGER 心愿碎片
+};
+
+const rewardIcon = {
+    redDrip: "icon-material200",
+    blueDrip: "icon-material201",
+    purpleDrip: "icon-material202",
+    rainbowP: "icon-material203",
+    rainbowMelody: "icon-material204",
+    gachaFree: "icon-gacha-ticket-cn-free",
+    jewel: "icon-jewel",
+    drink: "icon-boost-item1",
+    drinkL: "icon-boost-item2",
+    material127: "icon-material127",
+    material128: "icon-material128",
+    material129: "icon-material129",
+    material130: "icon-material130",
+    material131: "icon-material131",
+    material132: "icon-material132"
+};
+
+// const preSignIn: FixedLengthArray<Rewards, 7>=[
+//
+// ];
+
+const signIn: FixedLengthArray<Rewards, 7> = [
+    {
+        rainbowMelody: 1,
+        jewel: 5000,
+        drinkL: 10,
+        gachaFree: 40
+    },
+    { gachaFree: 10 },
+    { gachaFree: 10 },
+    { gachaFree: 10 },
+    { gachaFree: 10 },
+    { gachaFree: 10 },
+    { gachaFree: 10 }
+];
+
+const stamp: {
+    description: string;
+    level: { require: string; rewards: Rewards; extra?: string[] }[];
+}[] = [
+    {
+        description: "组合卡",
+        level: [
+            {
+                require: "选择VS分类的歌完成30次演出",
+                rewards: {
+                    redDrip: 1000,
+                    material132: 300
+                },
+                extra: ["可以使用Auto"]
+            },
+            {
+                require: "选择 LN 的书下曲完成30次演出",
+                rewards: {
+                    redDrip: 1000,
+                    material127: 300
+                },
+                extra: ["不可使用Auto，仅成员箱活书下曲，团曲、电影原创曲等不包含在内"]
+            },
+            {
+                require: "选择 MMJ 的书下曲完成30次演出",
+                rewards: {
+                    redDrip: 1000,
+                    material128: 300
+                },
+                extra: ["不可使用Auto，仅成员箱活书下曲，团曲、电影原创曲等不包含在内"]
+            },
+            {
+                require: "选择 VBS 的书下曲完成30次演出",
+                rewards: {
+                    redDrip: 1000,
+                    material129: 300
+                },
+                extra: ["不可使用Auto，仅成员箱活书下曲，团曲、电影原创曲等不包含在内"]
+            },
+            {
+                require: "选择 WS 的书下曲完成30次演出",
+                rewards: {
+                    redDrip: 1000,
+                    material130: 300
+                },
+                extra: ["不可使用Auto，仅成员箱活书下曲，团曲、电影原创曲等不包含在内"]
+            },
+            {
+                require: "选择 25 的书下曲完成30次演出",
+                rewards: {
+                    redDrip: 1000,
+                    material131: 300
+                },
+                extra: ["不可使用Auto，仅成员箱活书下曲，团曲、电影原创曲等不包含在内"]
+            }
+        ]
+    },
+    {
+        description: "演出卡",
+        level: [
+            {
+                require: "累计完成1.5周年追加歌曲30次",
+                rewards: {
+                    blueDrip: 300,
+                    drinkL: 1
+                }
+            },
+            {
+                require: "累计FC 20次（歌曲、难度不限）",
+                rewards: {
+                    blueDrip: 600,
+                    drinkL: 2
+                }
+            },
+            {
+                require: "累计AP 15次（歌曲、难度不限）",
+                rewards: {
+                    blueDrip: 1000,
+                    drinkL: 3
+                }
+            }
+        ]
+    },
+    {
+        description: "挑战任务",
+        level: [
+            {
+                require: "完成全部子任务",
+                rewards: {
+                    blueDrip: 300,
+                    drinkL: 1
+                },
+                extra: [
+                    "完成1次《ペンタトニック（五声音阶）》",
+                    "完成多人演出10次",
+                    "达成Super Fever 3次（SF：多人演出且五人进歌，所有人在Fever Chance阶段全连）",
+                    "累计消耗50点演出能量",
+                    "观看活动“Our Golden Days”的结局",
+                    "累计获得20w活动pt",
+                    "烤森采集200个材料（不包括特殊活动材料与生日庆典甘露）"
+                ]
+            },
+            {
+                require: "完成全部子任务",
+                rewards: {
+                    blueDrip: 600,
+                    drinkL: 2
+                },
+                extra: [
+                    "完成10次《ペンタトニック（五声音阶）》",
+                    "完成多人演出30次",
+                    "达成Super Fever 10次",
+                    "累计消耗100点演出能量",
+                    "观看活动“Our Golden Days”的结局",
+                    "累计获得100w活动pt",
+                    "烤森采集500个材料（不包括特殊活动材料与生日庆典甘露）"
+                ]
+            },
+            {
+                require: "完成全部子任务",
+                rewards: {
+                    blueDrip: 1000,
+                    drinkL: 3
+                },
+                extra: [
+                    "多人演出中5人全员FC 5次",
+                    "达成Super Fever 15次",
+                    "获得MVP或SUPER STAR（多人演出结算时分数最高者）10次",
+                    "完成30首不同的歌曲",
+                    "累计消耗300点演出能量",
+                    "累计获得300w活动pt",
+                    "烤森采集1000个材料（不包括特殊活动材料与生日庆典甘露）"
+                ]
+            }
+        ]
+    },
+    {
+        description: "招募·商店",
+        level: [
+            {
+                require: "累计招募任意卡池50次",
+                rewards: {
+                    purpleDrip: 60,
+                    gachaFree: 10
+                }
+            },
+            {
+                require: "完成全部子任务",
+                rewards: {
+                    purpleDrip: 140,
+                    gachaFree: 20,
+                    jewel: 1000
+                },
+                extra: [
+                    "累计招募任意卡池 100 次",
+                    "招募 50 次 fes池或当期活动池",
+                    "招募 1 个高级礼物池（团服池）",
+                    "招募庆典服装阶梯池到 step1",
+                    "招募纪念自选池",
+                    "购买 1 种 1.5 周年纪念礼包（300的不算）",
+                    "购买 10 月份的白金通行证或烤森通行证"
+                ]
+            },
+            {
+                require: "完成全部子任务",
+                rewards: {
+                    purpleDrip: 200,
+                    gachaFree: 30,
+                    jewel: 2000
+                },
+                extra: [
+                    "累计招募任意卡池 200 次",
+                    "招募 100 次 fes池或当期活动池",
+                    "招募 2 个高级礼物池（团服池）",
+                    "招募庆典服装阶梯池到 step4",
+                    "招募纪念自选池",
+                    "购买 2 种 1.5 周年纪念礼包（300的不算）",
+                    "购买 10 月份的白金通行证或烤森通行证"
+                ]
+            }
+        ]
+    }
+];
+
+const costumePriceLevel = [500, 1000, 2000, 3900] as const;
+
+type exchangeChoice = { count: number; expense: number; limit: number; icon: string };
+const redExchange = {
+    jewel: {
+        count: 300,
+        expense: 200,
+        limit: 1,
+        icon: "icon-jewel"
+    },
+    skill3: {
+        count: 1,
+        expense: 250,
+        limit: 5,
+        icon: "icon-skill-practice-ticket3"
+    },
+    exp3: {
+        count: 10,
+        expense: 300,
+        limit: 5,
+        icon: "icon-practice-ticket3"
+    },
+    liveCoin: {
+        count: 300,
+        expense: 500,
+        limit: 5,
+        icon: "icon-virtual-coin"
+    },
+    coin: {
+        count: 1,
+        expense: 1,
+        limit: Infinity,
+        icon: "icon-coin"
+    }
+} satisfies Record<string, exchangeChoice>;
+
+const blueExchange = {
+    jewel: {
+        count: 300,
+        expense: 200,
+        limit: 1,
+        icon: "icon-jewel"
+    },
+    anniv1_5Furniture: {
+        count: 1,
+        expense: 500,
+        limit: 1,
+        icon: "icon-item-material-storageadd"
+    },
+    blueprint: {
+        count: 1,
+        expense: 300,
+        limit: 2,
+        icon: "icon-item-blueprint"
+    },
+    chainsaw: {
+        count: 1,
+        expense: 300,
+        limit: 2,
+        icon: "icon-axe5"
+    },
+    rockDrill: {
+        count: 1,
+        expense: 300,
+        limit: 2,
+        icon: "icon-pickaxe5"
+    },
+    coin: {
+        count: 1,
+        expense: 1,
+        limit: Infinity,
+        icon: "icon-coin"
+    }
+} satisfies Record<string, exchangeChoice>;
+
+const purpleExchange = {
+    cos: {
+        count: 1,
+        expense: 300,
+        limit: 1,
+        icon: "icon-cos-1_5an"
+    },
+    heartcrystal: {
+        count: 1,
+        expense: 100,
+        limit: 1,
+        icon: "icon-material16"
+    },
+    bottleVs: {
+        count: 1,
+        expense: 100,
+        limit: 1,
+        icon: "icon-item-expset-vs"
+    },
+    bottleLn: {
+        count: 1,
+        expense: 100,
+        limit: 1,
+        icon: "icon-item-expset-ln"
+    },
+    bottleMmj: {
+        count: 1,
+        expense: 100,
+        limit: 1,
+        icon: "icon-item-expset-mmj"
+    },
+    bottleVbs: {
+        count: 1,
+        expense: 100,
+        limit: 1,
+        icon: "icon-item-expset-vbs"
+    },
+    bottleWs: {
+        count: 1,
+        expense: 100,
+        limit: 1,
+        icon: "icon-item-expset-ws"
+    },
+    bottle25: {
+        count: 1,
+        expense: 100,
+        limit: 1,
+        icon: "icon-item-expset-25"
+    },
+    coin: {
+        count: 1,
+        expense: 1,
+        limit: Infinity,
+        icon: "icon-coin"
+    }
+} satisfies Record<string, exchangeChoice>;
+
+const rainbowExchange = {
+    gachaFree: {
+        count: 100,
+        expense: 1,
+        limit: 1,
+        icon: "icon-gacha-ticket-cn-free"
+    },
+    heartcrystal: {
+        count: 3,
+        expense: 1,
+        limit: 1,
+        icon: "icon-material16"
+    },
+    drinkL: {
+        count: 50,
+        expense: 1,
+        limit: 1,
+        icon: "icon-boost-item2"
+    }
+} satisfies Record<string, exchangeChoice>;
+
+const ptExchange = {
+    shizuku: {
+        count: 1,
+        expense: 30000,
+        limit: 3,
+        icon: "icon-material57"
+    },
+    jewel: {
+        count: 100,
+        expense: 1000,
+        limit: 5,
+        icon: "icon-jewel"
+    },
+    drink: {
+        count: 1,
+        expense: 100,
+        limit: 10,
+        icon: "icon-boost-item1"
+    },
+    exp2: {
+        count: 1,
+        expense: 100,
+        limit: 50,
+        icon: "icon-practice-ticket2"
+    },
+    anvoCardLn: {
+        count: 1,
+        expense: 15000,
+        limit: 2,
+        icon: "icon-material50"
+    },
+    stickerStamp: {
+        count: 1,
+        expense: 5000,
+        limit: 1,
+        icon: "icon-material44"
+    },
+    heartpiece: {
+        count: 5,
+        expense: 1000,
+        limit: 20,
+        icon: "icon-material15"
+    },
+    cloth: {
+        count: 1,
+        expense: 50,
+        limit: 300,
+        icon: "icon-material11"
+    },
+    thread: {
+        count: 1,
+        expense: 500,
+        limit: 30,
+        icon: "icon-material12"
+    },
+    coinSet: {
+        count: 100000,
+        expense: 10000,
+        limit: 1,
+        icon: "icon-coin"
+    },
+    piece2: {
+        count: 100,
+        expense: 500,
+        limit: 10,
+        icon: "icon-material2"
+    },
+    bottle7: {
+        count: 10,
+        expense: 500,
+        limit: 20,
+        icon: "icon-material7"
+    },
+    songCard: {
+        count: 1,
+        expense: 300,
+        limit: 10,
+        icon: "icon-material13"
+    },
+    rainbowBottle: {
+        count: 5,
+        expense: 1000,
+        limit: 20,
+        icon: "icon-material14"
+    },
+    seed: {
+        count: 1,
+        expense: 1000,
+        limit: 10,
+        icon: "icon-material17"
+    },
+    skill2: {
+        count: 1,
+        expense: 5000,
+        limit: 8,
+        icon: "icon-skill-practice-ticket2"
+    },
+    member3: {
+        count: 1,
+        expense: 15000,
+        limit: 1,
+        icon: "icon-material45"
+    },
+    member2: {
+        count: 1,
+        expense: 5000,
+        limit: 1,
+        icon: "icon-material167"
+    },
+    // p: {
+    //     count: 10,
+    //     expense: 5000,
+    //     limit: 15,
+    //     icon: "icon-material170"
+    // },
+    coin: {
+        count: 1,
+        expense: 1,
+        limit: Infinity,
+        icon: "icon-coin"
+    }
+} satisfies Record<string, exchangeChoice>;
+
+export default {
+    signIn,
+    rewardIcon,
+    stamp,
+    costumePriceLevel,
+    redExchange,
+    blueExchange,
+    purpleExchange,
+    rainbowExchange,
+    ptExchange
+};

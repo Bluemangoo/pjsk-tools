@@ -16,10 +16,10 @@ function generateIconCSS({
         icons[`material${i}`] =
             `https://storage.exmeaning.com/sekai-jp-assets/thumbnail/material/material${i}.png`;
     }
-    for (let i = 1; i <= 225; i++) {
-        icons[`material-bare${i}`] =
-            `https://storage.exmeaning.com/sekai-jp-assets/ondemand/mysekai/item_preview/material/material${i}.png`;
-    }
+    // for (let i = 1; i <= 225; i++) {
+    //     icons[`material-bare${i}`] =
+    //         `https://storage.exmeaning.com/sekai-jp-assets/ondemand/mysekai/item_preview/material/material${i}.png`;
+    // }
     for (let i = 1; i <= 27; i++) {
         icons[`boost-item${i}`] =
             `https://storage.exmeaning.com/sekai-jp-assets/thumbnail/boost_item/boost_item${i}.png`;
@@ -38,6 +38,21 @@ function generateIconCSS({
         icons[`practice-ticket${i}`] =
             `https://storage.exmeaning.com/sekai-jp-assets/thumbnail/practice_ticket/ticket${i}.png`;
     }
+    for (let i = 1; i <= 5; i++) {
+        for (const type of [
+            ["ax", "axe"],
+            ["pickax", "pickaxe"]
+        ]) {
+            icons[`${type[1]}${i}`] =
+                `https://storage.exmeaning.com/sekai-jp-assets/mysekai/thumbnail/tool/${type[0]}000${i}.png`;
+            icons[`${type[1]}${i}-bare`] =
+                `https://storage.exmeaning.com/sekai-jp-assets/mysekai/thumbnail/tool/${type[0]}000${i}_t.png`;
+        }
+    }
+    icons[`item-blueprint`] =
+        `https://storage.exmeaning.com/sekai-jp-assets/mysekai/thumbnail/item/item_blank_blueprint.png`;
+    icons[`item-material-storageadd`] =
+        `https://storage.exmeaning.com/sekai-jp-assets/mysekai/thumbnail/player_status/item_material_storageadd.png`;
     icons["heartcrystal-bare"] =
         "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/common_event/heart/icon_heartcrystal.png";
     icons["heartpiece-bare"] =
@@ -50,13 +65,27 @@ function generateIconCSS({
         "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/common_material/jewel.png";
     icons["virtual-coin"] =
         "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/common_material/virtual_coin.png";
-    icons["coin"] = "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/common_material/coin.png";
+    icons["coin"] =
+        "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/common_material/coin.png";
     icons["gacha-ticket"] =
         "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/gacha_ticket/gacha_ticket.png";
     icons["gacha-ticket-cn-free"] =
-        "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/gacha_ticket/gacha_ticket_cn_free.png";
+        "https://storage.exmeaning.com/sekai-cn-assets/thumbnail/gacha_ticket/gacha_ticket_cn_free.png";
     icons["gacha-ticket-star4"] =
         "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/gacha_ticket/gacha_ticket_star4.png";
+    icons["item-expset-25"] =
+        "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/material_exchange/item_expset_25.png";
+    icons["item-expset-ln"] =
+        "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/material_exchange/item_expset_ln.png";
+    icons["item-expset-mmj"] =
+        "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/material_exchange/item_expset_mj.png";
+    icons["item-expset-vbs"] =
+        "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/material_exchange/item_expset_vb.png";
+    icons["item-expset-vs"] =
+        "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/material_exchange/item_expset_vs.png";
+    icons["item-expset-ws"] =
+        "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/material_exchange/item_expset_ws.png";
+
     for (const name of ["shiho"]) {
         for (let i = 1; i <= 4; i++) {
             icons[`eventbadge-${name}${i}`] =

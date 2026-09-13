@@ -60,6 +60,12 @@ import PartH2 from "@/components/parts/part-h2.vue";
                         <template #subLabel>1st Anniversary Collection</template>
                     </CardShortcut>
                 </EffectLink>
+                <EffectLink href="/tools/1_5an-collection">
+                    <CardShortcut>
+                        <template #label>1.5 周年集章</template>
+                        <template #subLabel>1.5th Anniversary Collection</template>
+                    </CardShortcut>
+                </EffectLink>
             </div>
         </div>
     </ContainerPageIndex>

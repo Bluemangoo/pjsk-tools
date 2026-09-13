@@ -107,7 +107,7 @@ const isMax = computed(() => (parseFloat(innerStr.value) || 0) >= props.max);
     >
         <button
             type="button"
-            @click="changeStep(-step)"
+            @click="changeStep(-(step || 1))"
             :disabled="disabled || isMin"
             class="flex h-full aspect-square p-[1%] rounded-full transition-all text-miku-dark dark:text-miku hover:bg-miku hover:text-white active:scale-90 disabled:opacity-20 select-none cursor-pointer items-center justify-center"
         >
@@ -130,7 +130,7 @@ const isMax = computed(() => (parseFloat(innerStr.value) || 0) >= props.max);
 
         <button
             type="button"
-            @click="changeStep(step)"
+            @click="changeStep(step || 1)"
             :disabled="disabled || isMax"
             class="flex h-full aspect-square p-[1%] rounded-full transition-all text-miku-dark dark:text-miku hover:bg-miku hover:text-white active:scale-90 disabled:opacity-20 select-none cursor-pointer items-center justify-center"
         >

@@ -14,15 +14,18 @@ interface ChangeEvent {
 const props = defineProps<{
     options: Option[];
     modelValue: (string | number)[];
+    lockedValue?: (string | number)[];
     beforeChange?: (value: string | number, willCheck: boolean) => boolean | Promise<boolean>;
 }>();
 
 const emit = defineEmits<{
     (e: "update:modelValue", value: (string | number)[]): void;
+    (e: "update:lockedValue", value: (string | number)[]): void;
     (e: "change", payload: ChangeEvent): void;
 }>();
 
 const isChecked = (value: string | number) => props.modelValue.includes(value);
+const isLocked = (value: string | number) => props.lockedValue?.includes(value) ?? false;
 
 const handleToggle = async (value: string | number) => {
     const willCheck = !isChecked(value);
@@ -62,9 +65,10 @@ const handleToggle = async (value: string | number) => {
                 @click="handleToggle(item.value)"
                 class="flex items-center justify-center p-2 rounded-lg border-2 transition-all duration-200 cursor-pointer select-none active:scale-95 min-w-25 overflow-hidden"
                 :class="
-                    isChecked(item.value)
+                    (isChecked(item.value)
                         ? 'bg-miku border-miku text-white shadow-[0_4px_12px_rgba(57,197,187,0.3)] dark:shadow-[0_4px_12px_rgba(57,197,187,0.15)]'
-                        : 'bg-white/40 dark:bg-slate-800/40 border-zinc-200 dark:border-slate-700 text-zinc-600 dark:text-slate-300 hover:border-miku/50 dark:hover:border-miku/60'
+                        : 'bg-white/40 dark:bg-slate-800/40 border-zinc-200 dark:border-slate-700 text-zinc-600 dark:text-slate-300 hover:border-miku/50 dark:hover:border-miku/60') +
+                    (isLocked(item.value) ? 'bg-miku/80' : '')
                 "
             >
                 <span

@@ -23,7 +23,7 @@ const selectTab = (key: string) => {
 <template>
     <div class="w-full flex w-full min-w-0 flex-col items-center">
         <nav
-            class="sticky top-[4.5rem] sm:top-20 z-50 p-1 mx-4 sm:mx-0 flex items-center bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-miku/20 dark:border-slate-700/50 rounded-full shadow-md dark:shadow-slate-900/50 transition-colors duration-300 w-[calc(100%-2rem)] sm:w-max max-w-full overflow-x-auto scroller-hide"
+            class="sticky top-18 sm:top-20 z-50 p-1 mx-4 sm:mx-0 flex items-center bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-miku/20 dark:border-slate-700/50 rounded-full shadow-md dark:shadow-slate-900/50 transition-colors duration-300 w-[calc(100%-2rem)] sm:w-max max-w-full overflow-x-auto scroller-hide"
         >
             <div class="relative flex items-center shrink-0">
                 <div

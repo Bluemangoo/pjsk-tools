@@ -4,6 +4,7 @@ import PageNotFound from "@/pages/page-not-found.vue";
 import Page1an from "@/pages/page-1an.vue";
 import { makeTitle } from "@/utils/a-jump.ts";
 import PageLearning from "@/pages/page-learning.vue";
+import Page1_5an from "@/pages/page-1_5an.vue";
 
 export type Route =
     | {
@@ -45,5 +46,11 @@ export const routes: Route[] = [
         path: "/tools/1an-collection",
         component: Page1an,
         title: "1 周年集章活动"
+    },
+    {
+        type: "page",
+        path: "/tools/1_5an-collection",
+        component: Page1_5an,
+        title: "1.5 周年集章活动"
     }
 ];
