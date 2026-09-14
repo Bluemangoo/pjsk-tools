@@ -8,6 +8,7 @@ import type { FixedLengthArray } from "@/types/typeConstraints.ts";
 import CheckboxSlide from "@/components/controls/checkbox-slide.vue";
 import { parseCharaIcon } from "@/utils/icon.ts";
 import InputNumber from "@/components/controls/input-number.vue";
+import ButtonNormal from "@/components/controls/button-normal.vue";
 
 const signIn: FixedLengthArray<number, 7> = [5, 10, 5, 5, 5, 5, 10];
 const signInRewardList = signIn.map((item, index) => {
@@ -90,6 +91,9 @@ const userExchange = reactive(
         return exchange as { [key in keyof typeof exchangeData]: number };
     })()
 );
+function resetLocalStorage() {
+    localStorage.clear();
+}
 </script>
 
 <template>
@@ -101,9 +105,7 @@ const userExchange = reactive(
         </PartH1>
 
         <PartH2>签到</PartH2>
-        <div class="mb-5">
-            签到组件点击第 N 天即选择共签到 N 天。
-        </div>
+        <div class="mb-5">签到组件点击第 N 天即选择共签到 N 天。</div>
         <CheckboxGroup
             v-model="signInRewardSelects"
             :options="signInRewardList"
@@ -271,6 +273,11 @@ const userExchange = reactive(
             <p>有些地方支持导入和导出选择情况来分享。</p>
             <p>点击导出按钮可以复制数据到剪切板。</p>
             <p>把数据粘贴到对应的文本框再点击导入就可以加载数据啦。</p>
+        </div>
+        <div class="mb-5" />
+        <PartH2>修复</PartH2>
+        <div class="mb-5 w-max">
+            <ButtonNormal class="px-4 py-1" @click="resetLocalStorage">清空本地存储</ButtonNormal>
         </div>
     </ContainerPageContent>
 </template>

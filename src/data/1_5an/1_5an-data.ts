@@ -55,6 +55,186 @@ const signIn: FixedLengthArray<Rewards, 7> = [
     { gachaFree: 10 }
 ];
 
+export interface MemoryGiftLevel {
+    text: string;
+    reward: Record<
+        string,
+        {
+            count: number;
+            icon: string;
+        }
+    >;
+}
+
+const memoryGifts: {
+    day: number;
+    date: string;
+    details: string;
+    level: MemoryGiftLevel[];
+}[] = [
+    {
+        day: 1,
+        date: "DAY1 9.27",
+        details: "累计登录天数",
+        level: [
+            {
+                text: "30 天",
+                reward: { gachaFree: { count: 3, icon: "icon-gacha-ticket-cn-free" } }
+            },
+            {
+                text: "100 天",
+                reward: { gachaFree: { count: 5, icon: "icon-gacha-ticket-cn-free" } }
+            },
+            {
+                text: "250 天",
+                reward: { gachaFree: { count: 7, icon: "icon-gacha-ticket-cn-free" } }
+            },
+            {
+                text: "365 天",
+                reward: { gachaFree: { count: 10, icon: "icon-gacha-ticket-cn-free" } }
+            }
+        ]
+    },
+    {
+        day: 2,
+        date: "DAY2 9.28",
+        details: "歌曲的完成、FC、AP数",
+        level: [
+            {
+                text: "30 首",
+                reward: { exp3: { count: 3, icon: "icon-practice-ticket3" } }
+            },
+            {
+                text: "60 首",
+                reward: { exp3: { count: 5, icon: "icon-practice-ticket3" } }
+            },
+            {
+                text: "100 首",
+                reward: { exp3: { count: 7, icon: "icon-practice-ticket3" } }
+            },
+            {
+                text: "150 首",
+                reward: { exp3: { count: 10, icon: "icon-practice-ticket3" } }
+            }
+        ]
+    },
+    {
+        day: 3,
+        date: "DAY3 9.29",
+        details: "拥有的成员数",
+        level: [
+            {
+                text: "50 人",
+                reward: { skill3: { count: 1, icon: "icon-skill-practice-ticket3" } }
+            },
+            {
+                text: "100 人",
+                reward: { skill3: { count: 2, icon: "icon-skill-practice-ticket3" } }
+            },
+            {
+                text: "150 人",
+                reward: { skill3: { count: 3, icon: "icon-skill-practice-ticket3" } }
+            },
+            {
+                text: "200 人",
+                reward: { skill3: { count: 4, icon: "icon-skill-practice-ticket3" } }
+            }
+        ]
+    },
+    {
+        day: 4,
+        date: "DAY4 9.30",
+        details: "已制作家具的种类数",
+        level: [
+            {
+                text: "10 种",
+                reward: { material168: { count: 3, icon: "icon-material168" } }
+            },
+            {
+                text: "25 种",
+                reward: { material168: { count: 5, icon: "icon-material168" } }
+            },
+            {
+                text: "50 种",
+                reward: { material168: { count: 7, icon: "icon-material168" } }
+            },
+            {
+                text: "80 种",
+                reward: { material168: { count: 10, icon: "icon-material168" } }
+            }
+        ]
+    },
+    {
+        day: 5,
+        date: "DAY5 10.1",
+        details: "最高角色等级",
+        level: [
+            {
+                text: "20 级",
+                reward: { jewel: { count: 100, icon: "icon-jewel" } }
+            },
+            {
+                text: "35 级",
+                reward: { jewel: { count: 200, icon: "icon-jewel" } }
+            },
+            {
+                text: "50 级",
+                reward: { jewel: { count: 300, icon: "icon-jewel" } }
+            },
+            {
+                text: "65 级",
+                reward: { jewel: { count: 400, icon: "icon-jewel" } }
+            }
+        ]
+    },
+    {
+        day: 6,
+        date: "DAY6 10.2",
+        details: "主线、活动剧情全部观看率",
+        level: [
+            {
+                text: "25%",
+                reward: { heartpiece: { count: 100, icon: "icon-material15" } }
+            },
+            {
+                text: "50%",
+                reward: { heartpiece: { count: 200, icon: "icon-material15" } }
+            },
+            {
+                text: "75%",
+                reward: { heartpiece: { count: 300, icon: "icon-material15" } }
+            },
+            {
+                text: "100%",
+                reward: { heartpiece: { count: 400, icon: "icon-material15" } }
+            }
+        ]
+    },
+    {
+        day: 7,
+        date: "DAY7 10.3",
+        details: "最高活动排名",
+        level: [
+            {
+                text: "前100000名",
+                reward: { drinkL: { count: 3, icon: "icon-boost-item2" } }
+            },
+            {
+                text: "前50000名",
+                reward: { drinkL: { count: 5, icon: "icon-boost-item2" } }
+            },
+            {
+                text: "前20000名",
+                reward: { drinkL: { count: 7, icon: "icon-boost-item2" } }
+            },
+            {
+                text: "前1000名",
+                reward: { drinkL: { count: 10, icon: "icon-boost-item2" } }
+            }
+        ]
+    }
+] as const;
+
 const stamp: {
     description: string;
     level: { require: string; rewards: Rewards; extra?: string[] }[];
@@ -518,6 +698,7 @@ const ptExchange = {
 export default {
     signIn,
     rewardIcon,
+    memoryGifts,
     stamp,
     costumePriceLevel,
     redExchange,

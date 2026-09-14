@@ -2,7 +2,15 @@
 import ContainerPageContent from "@/components/containers/container-page-content.vue";
 import PartH1 from "@/components/parts/part-h1.vue";
 import PartH2 from "@/components/parts/part-h2.vue";
-import { computed, onMounted, type Reactive, reactive, type Ref, ref, watch } from "vue";
+import {
+    computed,
+    onMounted,
+    type Reactive,
+    reactive,
+    type Ref,
+    ref,
+    watch
+} from "vue";
 import data from "../data/1_5an/1_5an-data.ts";
 import ContainerTab from "@/components/containers/container-tab.vue";
 import CheckboxGroup from "@/components/controls/checkbox-group.vue";
@@ -12,11 +20,11 @@ import CheckboxSlide from "@/components/controls/checkbox-slide.vue";
 import { parseCharaIcon } from "@/utils/icon.ts";
 import ButtonNormal from "@/components/controls/button-normal.vue";
 import InputTextarea from "@/components/controls/input-textarea.vue";
-import { footerOverlapHeight } from "@/utils/footer-tracker.ts";
 import FlagUnclear from "@/components/shorten/flag-unclear.vue";
 
 // vars
 const signDays = ref(0);
+const memoryGiftsLevel: Ref<number[]> = ref([0, 0, 0, 0, 0, 0, 0]);
 const gachaFesFree = ref(0);
 const gachaFesPaid = ref(0);
 const gachaGiftStepValue = ref(0);
@@ -136,6 +144,10 @@ function clear() {
     updateSignIn();
     live.value = 0;
     mySekai.value = 0;
+    memoryGiftsLevel.value = [0, 0, 0, 0, 0, 0, 0];
+    for (let i = 0; i < memoryGifts.length; i++) {
+        memoryGifts[i]!.updateGift();
+    }
 
     gachaFesFree.value = 0;
     gachaFesPaid.value = 0;
@@ -171,6 +183,7 @@ function exportTo(): string {
 
     const exportData = {
         signDays: signDays.value,
+        memoryGiftsLevel: memoryGiftsLevel.value,
         live: live.value,
         mySekai: mySekai.value,
         gachaFesFree: gachaFesFree.value,
@@ -203,26 +216,33 @@ function importFrom(dataStr: string) {
     clear();
 
     // 基础签到与Live
-    signDays.value = Number(importData.signDays) || 0;
+    signDays.value = number(importData.signDays);
     updateSignIn();
-    live.value = Number(importData.live) || 0;
-    mySekai.value = Number(importData.mySekai) || 0;
+    live.value = number(importData.live);
+    mySekai.value = number(importData.mySekai);
 
     // 抽卡与转换（存储底层 step 值，保证 computed 正确生效）
-    gachaFesFree.value = Number(importData.gachaFesFree) || 0;
-    gachaFesPaid.value = Number(importData.gachaFesPaid) || 0;
-    gachaGiftStepValue.value = Number(importData.gachaGiftStepValue) || 0;
-    gachaCostumeStepValue.value = Number(importData.gachaCostumeStepValue) || 0;
+    gachaFesFree.value = number(importData.gachaFesFree);
+    gachaFesPaid.value = number(importData.gachaFesPaid);
+    gachaGiftStepValue.value = number(importData.gachaGiftStepValue);
+    gachaCostumeStepValue.value = number(importData.gachaCostumeStepValue);
     gachaSelectValue.value = Boolean(importData.gachaSelectValue);
     updateGachaCostume();
 
     rainbowConverted.value = Boolean(importData.rainbowConverted);
-    purpleConverted.value = Number(importData.purpleConverted) || 0;
+    purpleConverted.value = number(importData.purpleConverted);
 
     // 印章
     if (Array.isArray(importData.stamp)) {
         for (let i = 0; i < importData.stamp.length; i++) {
             stamp[i] = importData.stamp[i];
+        }
+    }
+
+    if (Array.isArray(importData.memoryGiftsLevel)) {
+        for (let i = 0; i < importData.memoryGiftsLevel.length; i++) {
+            memoryGiftsLevel.value[i] = number(importData.memoryGiftsLevel[i]);
+            memoryGifts[i]!.updateGift();
         }
     }
 
@@ -239,7 +259,7 @@ function importFrom(dataStr: string) {
         if (source) {
             for (const key in source) {
                 if (key in target && source[key] !== undefined) {
-                    (target as any)[key] = Number(source[key]) || 0;
+                    (target as any)[key] = number(source[key]);
                 }
             }
         }
@@ -259,6 +279,7 @@ onMounted(() => {
 watch(
     [
         signDays,
+        memoryGiftsLevel,
         gachaFesFree,
         gachaFesPaid,
         gachaGift,
@@ -362,9 +383,9 @@ const paidJewelUsedCount = computed(() => {
 });
 // positive
 
-const gachaPoints = computed(() => gachaFesFree.value * 0.5 + gachaFesPaid.value);
-const gachaFesProgress = computed(() => gachaPoints.value % 50);
-const gachaGotPurple = computed(() => Math.floor(gachaPoints.value / 50) * 100);
+// const gachaPoints = computed(() => gachaFesFree.value * 0.5 + gachaFesPaid.value);
+// const gachaFesProgress = computed(() => gachaPoints.value % 50);
+// const gachaGotPurple = computed(() => Math.floor(gachaPoints.value / 50) * 100);
 
 const redGotCount = computed(() => {
     let count = 0;
@@ -380,6 +401,9 @@ const redGotCount = computed(() => {
 
     return count;
 });
+const redCount = computed(() => {
+    return redGotCount.value - redUsedCount.value;
+});
 
 const blueGotCount = computed(() => {
     let count = 0;
@@ -394,6 +418,9 @@ const blueGotCount = computed(() => {
     }
 
     return count;
+});
+const blueCount = computed(() => {
+    return blueGotCount.value - blueUsedCount.value;
 });
 
 const purpleGotCount = computed(() => {
@@ -412,60 +439,18 @@ const purpleGotCount = computed(() => {
     return count;
 });
 
+const purpleCount = computed(() => {
+    return purpleGotCount.value - purpleUsedCount.value;
+});
+
 const rainbowGotCount = computed(() => {
     return rainbowConverted.value ? 1 : 0;
 });
-//
-// const rankP = computed(() => {
-//     switch (rankStep.value) {
-//         case 0:
-//             return 0;
-//         case 1: // t10w
-//             return 50;
-//         case 2: // t5w
-//             return 75;
-//         case 3: // t1w
-//             return 100;
-//         default:
-//             return 0;
-//     }
-// });
-//
-// const pGotCount = computed(() => {
-//     let count = 0;
-//
-//     for (let i = 0; i < signDays.value; i++) {
-//         count += data.signIn[i]!.p || 0;
-//     }
-//     count += gachaGotP.value;
-//     if (gachaGift.value) {
-//         count += 200;
-//     }
-//     if (gachaCostume.value) {
-//         count += 200;
-//     }
-//     count += ptExchange.p * 10;
-//     count += rankP.value;
-//     count += mySekai.value;
-//
-//     for (let i = 0; i < 5; i++) {
-//         if (stamp[i] == undefined) {
-//             continue;
-//         }
-//         count += data.stamp[i]!.level[stamp[i]!]!.rewards.p || 0;
-//     }
-//
-//     return count;
-// });
-// const pCount = computed(() => pGotCount.value - pUsedCount.value);
-// const giftGotCount = computed(() => {
-//     let count = 0;
-//     if (gachaGift.value) {
-//         count += 50;
-//     }
-//     return count;
-// });
-// const giftCount = computed(() => giftGotCount.value - giftUsedCount.value);
+
+const rainbowCount = computed(() => {
+    return rainbowGotCount.value - rainbowUsedCount.value;
+});
+
 const statistics = computed(() => {
     const map: { [key: string]: { icon: string; count: number } } = {};
     const alias: Record<string, string> = { coinSet: "coin" };
@@ -518,6 +503,23 @@ const statistics = computed(() => {
         icon: "icon-material15",
         count: heartpiece
     };
+
+    for (let i = 0; i < memoryGifts.length; i++) {
+        if (memoryGiftsLevel.value[i]! > 0) {
+            const reward = data.memoryGifts[i]!.level[memoryGiftsLevel.value[i]! - 1]!.reward;
+            for (const key in reward) {
+                const r = reward[key]!;
+                const mapK = alias[key] == undefined ? key : alias[key];
+                if (map[mapK] == undefined) {
+                    map[mapK] = {
+                        icon: r.icon,
+                        count: 0
+                    };
+                }
+                map[mapK].count += r.count;
+            }
+        }
+    }
 
     for (const key1 in data.redExchange) {
         const key = key1 as keyof typeof data.redExchange;
@@ -699,6 +701,66 @@ const signInRewards = computed(() => {
     return count;
 });
 
+// memory gifts
+const memoryGifts = reactive(
+    data.memoryGifts.map((dayData) => {
+        const rewardList = dayData.level.map((item, index) => {
+            const [firstReward] = Object.values(item.reward);
+            if (firstReward == undefined) {
+                throw new Error();
+            }
+            let tooltip = ``;
+
+            for (const reward in item.reward) {
+                const r = item.reward[reward]!;
+                tooltip += `${r.count}<i class="${r.icon}" ></i> `;
+            }
+
+            return {
+                label: `<div class="block"><div><i class="${firstReward.icon} size-16"></i></div><div class="text-xs font-medium">${item.text}</div></div><span
+            class="absolute right-2 bottom-6 min-w-5 h-5 px-1.5 bg-miku text-white rounded-full text-[0.65rem] font-bold flex items-center justify-center shadow-md border border-white"
+            >${firstReward.count}</span
+        >`,
+                value: index,
+                tooltip
+            };
+        });
+        const rewardSelects: Ref<number[]> = ref([]);
+        const handleRewardChange = (payload: {
+            value: string | number;
+            checked: boolean;
+            currentList: (string | number)[];
+        }) => {
+            if (
+                payload.value === memoryGiftsLevel.value[dayData.day - 1]! - 1 &&
+                !payload.checked
+            ) {
+                memoryGiftsLevel.value[dayData.day - 1] = 0;
+            } else {
+                memoryGiftsLevel.value[dayData.day - 1] = (payload.value as number) + 1;
+            }
+            if (memoryGiftsLevel.value[dayData.day - 1]! != 0) {
+                rewardSelects.value = [memoryGiftsLevel.value[dayData.day - 1]! - 1];
+            } else {
+                rewardSelects.value = [];
+            }
+        };
+        const updateGift = () => {
+            if (memoryGiftsLevel.value[dayData.day - 1]! != 0) {
+                rewardSelects.value = [memoryGiftsLevel.value[dayData.day - 1]! - 1];
+            } else {
+                rewardSelects.value = [];
+            }
+        };
+        return {
+            rewardList,
+            rewardSelects,
+            handleRewardChange,
+            updateGift
+        };
+    })
+);
+
 // costume gacha
 const gachaCostumePrice = data.costumePriceLevel.map((count, index) => {
     return {
@@ -731,7 +793,7 @@ const handleGachaCostumeChange = (payload: {
 };
 const gachaCostumeLock = computed(() => {
     const list = [];
-    for (let i = 0; i <= minGachaCostumeStep.value; i++) {
+    for (let i = 0; i < minGachaCostumeStep.value; i++) {
         list.push(i);
     }
     return list;
@@ -862,13 +924,28 @@ function exportAndCopy() {
                     }}</span>
                     <i class="icon-jewel mr-3 sm:mr-4 drop-shadow-sm"></i>
                     <span class="text-yellow-400 dark:text-yellow-300 text-lg mx-1 sm:mx-2">{{
-                        signInRewards.gachaFree
+                        signInRewards.drinkL
                     }}</span>
                     <i class="icon-boost-item2 mr-3 sm:mr-4 drop-shadow-sm"></i>
-                    <span class="text-lg mx-1 sm:mx-2">{{ signInRewards.drinkL }}</span>
+                    <span class="text-lg mx-1 sm:mx-2">{{ signInRewards.gachaFree }}</span>
                     <i class="icon-gacha-ticket-cn-free drop-shadow-sm"></i>
                 </div>
+
                 <div class="px-2 mt-2">
+                    <PartH2 level="3"> YOUR MEMORIES GIFT </PartH2>
+                </div>
+                <FlagUnclear class="mb-2" />
+                <div v-for="(control, index) in memoryGifts" :key="index" class="my-4">
+                    {{ data.memoryGifts[index]!.date }}
+                    {{ data.memoryGifts[index]!.details }}
+                    <CheckboxGroup
+                        class="mt-2"
+                        v-model="control.rewardSelects"
+                        :options="control.rewardList"
+                        @change="control.handleRewardChange"
+                    ></CheckboxGroup>
+                </div>
+                <div class="px-2 mt-6">
                     <PartH2 level="3"> 卡池获取 </PartH2>
                 </div>
                 <div
@@ -1164,6 +1241,16 @@ function exportAndCopy() {
                 <h2 class="hidden">活动道具兑换所</h2>
 
                 <TransitionGroup name="yslide">
+                    <div
+                        v-if="redCount < 0 || blueCount < 0 || purpleCount < 0 || rainbowCount < 0"
+                        class="flex w-full mb-2"
+                    >
+                        <div
+                            class="mr-auto py-1.5 px-3 border-red-500/50 bg-red-50 dark:bg-red-900/20 text-red-500 dark:text-red-400 font-bold border rounded-lg shadow-sm text-sm"
+                        >
+                            获取量小于消耗量！
+                        </div>
+                    </div>
                     <div class="flex flex-wrap gap-3">
                         <div
                             class="mt-2 mb-8 bg-white/40 dark:bg-slate-800/40 p-4 rounded-xl border border-white/50 dark:border-slate-700/50 text-slate-700 dark:text-slate-200 font-medium shadow-sm flex flex-wrap items-center gap-y-2 w-full sm:w-max mx-auto sm:mx-0"
@@ -1273,7 +1360,9 @@ function exportAndCopy() {
                             </div>
                         </button>
                     </div>
-                    <div class="flex flex-wrap justify-center sm:justify-start gap-4 sm:gap-5 mt-4">
+                    <div
+                        class="flex flex-wrap justify-center sm:justify-start gap-4 sm:gap-5 mt-16"
+                    >
                         <button
                             v-for="(item, key) in data.blueExchange"
                             :key="key"
@@ -1329,7 +1418,9 @@ function exportAndCopy() {
                             </div>
                         </button>
                     </div>
-                    <div class="flex flex-wrap justify-center sm:justify-start gap-4 sm:gap-5 mt-4">
+                    <div
+                        class="flex flex-wrap justify-center sm:justify-start gap-4 sm:gap-5 mt-16"
+                    >
                         <button
                             v-for="(item, key) in data.purpleExchange"
                             :key="key"
@@ -1385,7 +1476,9 @@ function exportAndCopy() {
                             </div>
                         </button>
                     </div>
-                    <div class="flex flex-wrap justify-center sm:justify-start gap-4 sm:gap-5 mt-4">
+                    <div
+                        class="flex flex-wrap justify-center sm:justify-start gap-4 sm:gap-5 mt-16"
+                    >
                         <button
                             v-for="(item, key) in data.rainbowExchange"
                             :key="key"
@@ -1607,16 +1700,16 @@ function exportAndCopy() {
                     <div
                         class="bg-white/40 dark:bg-slate-800/40 py-3 sm:py-4 rounded-xl border border-white/50 dark:border-slate-700/50 text-slate-700 dark:text-slate-200 font-medium shadow-sm grid grid-cols-2 items-center col-span-1 md:col-span-2 lg:col-span-1"
                     >
-                        <div class="flex items-center justify-center whitespace-nowrap">
-                            共消耗
-                            <span
-                                class="text-slate-500 dark:text-slate-400 text-[1.05rem] sm:text-lg font-bold mx-1.5"
-                                >{{ ptUsedCount }}</span
-                            >
-                            <i class="icon-eventbadge-shiho3 drop-shadow-sm" />
-                        </div>
+<!--                        <div class="flex items-center justify-center whitespace-nowrap">-->
+<!--                            共消耗-->
+<!--                            <span-->
+<!--                                class="text-slate-500 dark:text-slate-400 text-[1.05rem] sm:text-lg font-bold mx-1.5"-->
+<!--                                >{{ ptUsedCount }}</span-->
+<!--                            >-->
+<!--                            <i class="icon-eventbadge-shiho3 drop-shadow-sm" />-->
+<!--                        </div>-->
                         <div
-                            class="flex items-center justify-center border-l dark:border-slate-600 border-slate-300 whitespace-nowrap"
+                            class="flex items-center justify-center dark:border-slate-600 border-slate-300 whitespace-nowrap"
                         >
                             消耗
                             <span

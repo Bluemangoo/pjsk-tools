@@ -68,7 +68,7 @@ const handleToggle = async (value: string | number) => {
                     (isChecked(item.value)
                         ? 'bg-miku border-miku text-white shadow-[0_4px_12px_rgba(57,197,187,0.3)] dark:shadow-[0_4px_12px_rgba(57,197,187,0.15)]'
                         : 'bg-white/40 dark:bg-slate-800/40 border-zinc-200 dark:border-slate-700 text-zinc-600 dark:text-slate-300 hover:border-miku/50 dark:hover:border-miku/60') +
-                    (isLocked(item.value) ? 'bg-miku/80' : '')
+                    (isLocked(item.value) ? ' bg-miku/70' : '')
                 "
             >
                 <span
