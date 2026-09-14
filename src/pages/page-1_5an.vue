@@ -2,15 +2,7 @@
 import ContainerPageContent from "@/components/containers/container-page-content.vue";
 import PartH1 from "@/components/parts/part-h1.vue";
 import PartH2 from "@/components/parts/part-h2.vue";
-import {
-    computed,
-    onMounted,
-    type Reactive,
-    reactive,
-    type Ref,
-    ref,
-    watch
-} from "vue";
+import { computed, onMounted, type Reactive, reactive, type Ref, ref, watch } from "vue";
 import data from "../data/1_5an/1_5an-data.ts";
 import ContainerTab from "@/components/containers/container-tab.vue";
 import CheckboxGroup from "@/components/controls/checkbox-group.vue";
@@ -628,6 +620,14 @@ const tabs = [
 ];
 const activeTab = ref(tabs[0]!.key);
 
+const purpleConvertedMinTimes = computed(() => {
+    let cnt = purpleConverted.value;
+    if (cnt === 0) {
+        return 0;
+    }
+    return Math.ceil(cnt / 100);
+});
+
 // sign in
 const signInRewardList = data.signIn.map((item, index) => {
     let tooltip = "";
@@ -1039,9 +1039,7 @@ function exportAndCopy() {
                     class="bg-white/40 dark:bg-slate-800/40 p-4 sm:p-6 mb-6 rounded-2xl border border-white/50 dark:border-slate-700/50 shadow-sm flex flex-col md:flex-row gap-6 md:gap-8"
                 >
                     <div class="flex-1 flex flex-col">
-                        <div
-                            class="flex items-center text-slate-600 dark:text-slate-300 font-medium bg-white/50 dark:bg-slate-900/40 p-3 rounded-xl border border-white/40 dark:border-slate-700/40 shadow-inner mb-3 inline-block"
-                        >
+                        <div class="flex items-center font-medium p-3 mb-3 inline-block">
                             500
                             <i class="icon-material202 size-8 shrink-0 ml-1" />
                             + 1
@@ -1049,6 +1047,8 @@ function exportAndCopy() {
                             -> 1
                             <i class="icon-material203 size-8 shrink-0 ml-1" />
                         </div>
+
+                        <div class="mb-3">合成需要 30(月卡)/60 分钟</div>
                         <div
                             class="flex flex-row items-center mt-auto font-bold pl-2 pr-4 py-2 w-max"
                         >
@@ -1060,9 +1060,7 @@ function exportAndCopy() {
                     </div>
                     <div class="hidden md:block w-px bg-slate-200 dark:bg-slate-700/60 my-2"></div>
                     <div class="flex-1 flex flex-col">
-                        <div
-                            class="flex items-center text-slate-600 dark:text-slate-300 font-medium bg-white/50 dark:bg-slate-900/40 p-3 rounded-xl border border-white/40 dark:border-slate-700/40 shadow-inner mb-3 inline-block"
-                        >
+                        <div class="flex items-center font-medium p-3 mb-3 inline-block">
                             10
                             <i class="icon-material200 size-8 shrink-0 ml-1" />
                             + 10
@@ -1070,14 +1068,17 @@ function exportAndCopy() {
                             -> 1
                             <i class="icon-material202 size-8 shrink-0 ml-1" />
                         </div>
+                        <div class="mb-3">一次最多合成 100 个，需要 15(月卡)/30 分钟</div>
                         <div
                             class="flex flex-row items-center mt-auto font-bold pl-2 pr-4 py-2 w-max"
                         >
                             转换
-                            <div class="h-8 min-w-24 mx-2">
+                            <div class="h-8 min-w-28 mx-2">
                                 <InputNumber v-model="purpleConverted" :min="0" />
                             </div>
-                            次
+                            个，至少 {{ purpleConvertedMinTimes }} 格次共
+                            {{ purpleConverted / 4 / 3 }}(月卡)/{{ purpleConverted / 2 }}
+                            小时
                         </div>
                     </div>
                 </div>
@@ -1134,7 +1135,7 @@ function exportAndCopy() {
                             class="flex flex-row items-center mt-auto text-slate-700 dark:text-slate-200 font-bold bg-white/60 dark:bg-slate-900/60 pl-2 pr-4 py-2 rounded-full border border-white/50 dark:border-slate-700/50 shadow-sm w-max"
                         >
                             <span class="mr-2">累计产出</span>
-                            <div class="h-8 min-w-24 mr-3">
+                            <div class="h-8 min-w-28 mr-3">
                                 <InputNumber v-model="live" :min="0" />
                             </div>
                             <i class="icon-material200 drop-shadow-sm" />
@@ -1161,7 +1162,7 @@ function exportAndCopy() {
                             class="flex flex-row items-center mt-auto text-slate-700 dark:text-slate-200 font-bold bg-white/60 dark:bg-slate-900/60 pl-2 pr-4 py-2 rounded-full border border-white/50 dark:border-slate-700/50 shadow-sm w-max"
                         >
                             <span class="mr-2">累计产出</span>
-                            <div class="h-8 min-w-24 mr-3">
+                            <div class="h-8 min-w-28 mr-3">
                                 <InputNumber v-model="mySekai" :min="0" :step="30" />
                             </div>
                             <i class="icon-material201 drop-shadow-sm" />
@@ -1700,14 +1701,14 @@ function exportAndCopy() {
                     <div
                         class="bg-white/40 dark:bg-slate-800/40 py-3 sm:py-4 rounded-xl border border-white/50 dark:border-slate-700/50 text-slate-700 dark:text-slate-200 font-medium shadow-sm grid grid-cols-2 items-center col-span-1 md:col-span-2 lg:col-span-1"
                     >
-<!--                        <div class="flex items-center justify-center whitespace-nowrap">-->
-<!--                            共消耗-->
-<!--                            <span-->
-<!--                                class="text-slate-500 dark:text-slate-400 text-[1.05rem] sm:text-lg font-bold mx-1.5"-->
-<!--                                >{{ ptUsedCount }}</span-->
-<!--                            >-->
-<!--                            <i class="icon-eventbadge-shiho3 drop-shadow-sm" />-->
-<!--                        </div>-->
+                        <!--                        <div class="flex items-center justify-center whitespace-nowrap">-->
+                        <!--                            共消耗-->
+                        <!--                            <span-->
+                        <!--                                class="text-slate-500 dark:text-slate-400 text-[1.05rem] sm:text-lg font-bold mx-1.5"-->
+                        <!--                                >{{ ptUsedCount }}</span-->
+                        <!--                            >-->
+                        <!--                            <i class="icon-eventbadge-shiho3 drop-shadow-sm" />-->
+                        <!--                        </div>-->
                         <div
                             class="flex items-center justify-center dark:border-slate-600 border-slate-300 whitespace-nowrap"
                         >
