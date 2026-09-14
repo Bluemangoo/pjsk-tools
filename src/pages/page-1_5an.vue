@@ -1077,7 +1077,7 @@ function exportAndCopy() {
                                 <InputNumber v-model="purpleConverted" :min="0" />
                             </div>
                             个，至少 {{ purpleConvertedMinTimes }} 格次共
-                            {{ purpleConverted / 4 / 3 }}(月卡)/{{ purpleConverted / 2 }}
+                            {{ Math.floor(purpleConverted / 4 / 3 * 100) / 100 }}(月卡)/{{ purpleConverted / 2 }}
                             小时
                         </div>
                     </div>
