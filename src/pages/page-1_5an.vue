@@ -1132,13 +1132,15 @@ function exportAndCopy() {
                             <i class="icon-material200 shrink-0 ml-1" />
                         </div>
                         <div
-                            class="flex flex-row items-center mt-auto text-slate-700 dark:text-slate-200 font-bold bg-white/60 dark:bg-slate-900/60 pl-2 pr-4 py-2 rounded-full border border-white/50 dark:border-slate-700/50 shadow-sm w-max"
+                            class="flex flex-row items-center mt-auto font-bold pl-2 pr-4 py-2 w-max"
                         >
                             <span class="mr-2">累计产出</span>
                             <div class="h-8 min-w-28 mr-3">
                                 <InputNumber v-model="live" :min="0" />
                             </div>
                             <i class="icon-material200 drop-shadow-sm" />
+                            ，需要约 {{ live / 5 }}
+                            <i class="icon-boost-item1 drop-shadow-sm" />
                         </div>
                     </div>
 
@@ -1159,7 +1161,7 @@ function exportAndCopy() {
                             <i class="icon-material201 shrink-0 ml-1" />
                         </div>
                         <div
-                            class="flex flex-row items-center mt-auto text-slate-700 dark:text-slate-200 font-bold bg-white/60 dark:bg-slate-900/60 pl-2 pr-4 py-2 rounded-full border border-white/50 dark:border-slate-700/50 shadow-sm w-max"
+                            class="flex flex-row items-center mt-auto font-bold pl-2 pr-4 py-2 w-max"
                         >
                             <span class="mr-2">累计产出</span>
                             <div class="h-8 min-w-28 mr-3">
