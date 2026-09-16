@@ -9,10 +9,8 @@ export function toggleDark() {
 
 watchEffect(() => {
     if (typeof window !== "undefined") {
-        // 同步持久化到 localStorage
         localStorage.setItem("theme-dark", JSON.stringify(isDark.value));
 
-        // 切换 html 上的 dark 类
         if (isDark.value) {
             document.documentElement.classList.add("dark");
         } else {

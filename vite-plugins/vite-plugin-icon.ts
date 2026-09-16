@@ -38,6 +38,8 @@ function generateIconCSS({
         icons[`practice-ticket${i}`] =
             `https://storage.exmeaning.com/sekai-jp-assets/thumbnail/practice_ticket/ticket${i}.png`;
     }
+    icons[`tone`] =
+        "https://storage.exmeaning.com/sekai-jp-assets/mysekai/thumbnail/material/item_tone_8.png";
     for (let i = 1; i <= 5; i++) {
         for (const type of [
             ["ax", "axe"],

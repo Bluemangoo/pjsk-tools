@@ -10,6 +10,12 @@ type Rewards = {
     jewel?: number;
     drink?: number;
     drinkL?: number;
+    heartpiece?: number;
+    virtual_coin?: number;
+    skill2?: number;
+    tone?: number;
+    coin?: number;
+    material14?: number; // 彩虹晶石
     material127?: number; // Leo/need 心愿碎片
     material128?: number; // MORE MORE JUMP! 心愿碎片
     material129?: number; // Vivid BAD SQUAD 心愿碎片
@@ -28,6 +34,12 @@ const rewardIcon = {
     jewel: "icon-jewel",
     drink: "icon-boost-item1",
     drinkL: "icon-boost-item2",
+    virtual_coin: "icon-virtual-coin",
+    skill2: "icon-skill-practice-ticket2",
+    tone: "icon-tone",
+    coin: "icon-coinset",
+    material14: "icon-material14",
+    heartpiece: "icon-material15",
     material127: "icon-material127",
     material128: "icon-material128",
     material129: "icon-material129",
@@ -36,23 +48,37 @@ const rewardIcon = {
     material132: "icon-material132"
 };
 
-// const preSignIn: FixedLengthArray<Rewards, 7>=[
-//
-// ];
+const preSignIn: FixedLengthArray<Rewards, 3>=[
+    {
+        drinkL: 1,
+        material14: 50,
+        heartpiece: 100
+    },
+    {
+        drinkL: 1,
+        skill2: 2,
+        virtual_coin: 300
+    },
+    {
+        drinkL: 1,
+        tone: 1,
+        coin: 100000
+    }
+];
 
 const signIn: FixedLengthArray<Rewards, 7> = [
     {
         rainbowMelody: 1,
         jewel: 5000,
-        drinkL: 10,
-        gachaFree: 40
+        drinkL: 3,
+        gachaFree: 10
     },
-    { gachaFree: 10 },
-    { gachaFree: 10 },
-    { gachaFree: 10 },
-    { gachaFree: 10 },
-    { gachaFree: 10 },
-    { gachaFree: 10 }
+    { drinkL: 2, gachaFree: 10 },
+    { drinkL: 1, gachaFree: 10 },
+    { drinkL: 1, gachaFree: 10 },
+    { drinkL: 1, gachaFree: 10 },
+    { drinkL: 1, gachaFree: 10 },
+    { drinkL: 1, gachaFree: 10 }
 ];
 
 export interface MemoryGiftLevel {
@@ -696,6 +722,7 @@ const ptExchange = {
 } satisfies Record<string, exchangeChoice>;
 
 export default {
+    preSignIn,
     signIn,
     rewardIcon,
     memoryGifts,

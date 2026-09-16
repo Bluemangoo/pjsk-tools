@@ -1,3 +1,4 @@
+<!--suppress CssUnusedSymbol -->
 <script setup lang="ts">
 import ContainerPageContent from "@/components/containers/container-page-content.vue";
 import PartH1 from "@/components/parts/part-h1.vue";
@@ -15,6 +16,7 @@ import InputTextarea from "@/components/controls/input-textarea.vue";
 import FlagUnclear from "@/components/shorten/flag-unclear.vue";
 
 // vars
+const preSignDays = ref(0);
 const signDays = ref(0);
 const memoryGiftsLevel: Ref<number[]> = ref([0, 0, 0, 0, 0, 0, 0]);
 const gachaFesFree = ref(0);
@@ -132,6 +134,8 @@ const ptExchange = reactive(
 
 // import and export
 function clear() {
+    preSignDays.value = 0;
+    updatePreSignIn();
     signDays.value = 0;
     updateSignIn();
     live.value = 0;
@@ -174,6 +178,7 @@ function exportTo(): string {
     };
 
     const exportData = {
+        preSignDays: preSignDays.value,
         signDays: signDays.value,
         memoryGiftsLevel: memoryGiftsLevel.value,
         live: live.value,
@@ -208,6 +213,8 @@ function importFrom(dataStr: string) {
     clear();
 
     // 基础签到与Live
+    preSignDays.value = number(importData.preSignDays);
+    updatePreSignIn();
     signDays.value = number(importData.signDays);
     updateSignIn();
     live.value = number(importData.live);
@@ -270,6 +277,7 @@ onMounted(() => {
 });
 watch(
     [
+        preSignDays,
         signDays,
         memoryGiftsLevel,
         gachaFesFree,
@@ -460,6 +468,7 @@ const statistics = computed(() => {
         drink += data.signIn[i]!.drink || 0;
         drinkL += data.signIn[i]!.drinkL || 0;
     }
+
     for (let i = 0; i < 5; i++) {
         if (stamp[i] == undefined) {
             continue;
@@ -495,6 +504,20 @@ const statistics = computed(() => {
         icon: "icon-material15",
         count: heartpiece
     };
+
+    for (let i = 0; i < preSignDays.value; i++) {
+        for (const key in data.preSignIn[i]!) {
+            const r = data.rewardIcon[key as keyof typeof data.rewardIcon]!;
+            const mapK = alias[key] == undefined ? key : alias[key];
+            if (map[mapK] == undefined) {
+                map[mapK] = {
+                    icon: r,
+                    count: 0
+                };
+            }
+            map[mapK].count += (data.preSignIn[i] as any)[key];
+        }
+    }
 
     for (let i = 0; i < memoryGifts.length; i++) {
         if (memoryGiftsLevel.value[i]! > 0) {
@@ -626,6 +649,59 @@ const purpleConvertedMinTimes = computed(() => {
         return 0;
     }
     return Math.ceil(cnt / 100);
+});
+
+// pre sign in
+const preSignInRewardList = data.preSignIn.map((item, index) => {
+    let tooltip = "";
+    for (const key in item) {
+        const r = data.rewardIcon[key as keyof typeof data.rewardIcon]!;
+        tooltip += `${(item as any)[key]}<i class="${r}" ></i> `;
+    }
+    return {
+        label: `<div class="block"><div><i class="icon-boost-item2 size-16"></i></div><div class="text-xs font-medium">DAY ${index + 1}</div></div><span
+            class="absolute right-2 bottom-6 min-w-5 h-5 px-1.5 bg-miku text-white rounded-full text-[0.65rem] font-bold flex items-center justify-center shadow-md border border-white"
+            >${item.drinkL}</span
+        >`,
+        value: index,
+        tooltip
+    };
+});
+const preSignInRewardSelects: Ref<number[]> = ref([]);
+const handlePreSignInRewardChange = (payload: {
+    value: string | number;
+    checked: boolean;
+    currentList: (string | number)[];
+}) => {
+    if (payload.value === preSignDays.value - 1 && !payload.checked) {
+        preSignDays.value = 0;
+    } else {
+        preSignDays.value = (payload.value as number) + 1;
+    }
+    preSignInRewardSelects.value = [];
+    for (let i = 0; i < preSignDays.value; i++) {
+        preSignInRewardSelects.value.push(i);
+    }
+};
+function updatePreSignIn() {
+    preSignInRewardSelects.value = [];
+    for (let i = 0; i < preSignDays.value; i++) {
+        signInRewardSelects.value.push(i);
+    }
+}
+const preSignInRewards = computed(() => {
+    const count: Record<string, { icon: string; count: number }> = {};
+    for (let i = 0; i < preSignDays.value; i++) {
+        const item = data.preSignIn[i]!;
+        for (const key in item) {
+            const r = data.rewardIcon[key as keyof typeof data.rewardIcon]!;
+            if (!count[key]) {
+                count[key] = { icon: r, count: 0 };
+            }
+            count[key].count += (item as any)[key];
+        }
+    }
+    return count;
 });
 
 // sign in
@@ -903,9 +979,26 @@ function exportAndCopy() {
         <ContainerTab v-model="activeTab" :tabs="tabs">
             <template #collect>
                 <div class="px-2">
+                    <PartH2 level="3"> 即将 1.5 周年登录奖励 </PartH2>
+                </div>
+                <CheckboxGroup
+                    v-model="preSignInRewardSelects"
+                    :options="preSignInRewardList"
+                    @change="handlePreSignInRewardChange"
+                ></CheckboxGroup>
+                <div
+                    class="my-6 p-4 sm:px-6 bg-white/50 dark:bg-slate-800/50 rounded-xl border border-white/40 dark:border-slate-700/50 flex flex-wrap items-center gap-y-2 text-slate-700 dark:text-slate-200 font-medium shadow-sm backdrop-blur-sm"
+                >
+                    <span class="mr-2">共计</span>
+                    <template v-for="(item, key) in preSignInRewards" :key="key">
+                        <span class="text-lg mx-1 sm:mx-2">{{ item.count }}</span>
+                        <i :class="item.icon" class="drop-shadow-sm"></i>
+                    </template>
+                </div>
+
+                <div class="px-2">
                     <PartH2 level="3"> 登录奖励 </PartH2>
                 </div>
-                <FlagUnclear class="mb-2" />
                 <CheckboxGroup
                     v-model="signInRewardSelects"
                     :options="signInRewardList"
@@ -979,7 +1072,7 @@ function exportAndCopy() {
                     v-if="unfoldExtraGacha"
                     class="flex flex-col sm:flex-row items-center bg-white/40 dark:bg-slate-800/40 p-3 rounded-2xl border border-white/50 dark:border-slate-700/50 shadow-sm mb-4"
                 >
-                    <i class="icon-gacha-banner? w-60 h-28 rounded-xl shadow-md" />
+                    <i class="icon-gacha-banner833 w-60 h-28 rounded-xl shadow-md" />
                     <div class="m-3 sm:m-5 flex flex-col items-center sm:items-start gap-3">
                         <div
                             class="flex items-center text-center sm:text-left text-sm sm:text-base text-slate-700 dark:text-slate-200 font-medium"
@@ -1003,7 +1096,7 @@ function exportAndCopy() {
                     v-if="unfoldExtraGacha"
                     class="flex flex-col sm:flex-row items-center bg-white/40 dark:bg-slate-800/40 p-3 rounded-2xl border border-white/50 dark:border-slate-700/50 shadow-sm mb-6"
                 >
-                    <i class="icon-gacha-banner833 w-60 h-28 rounded-xl shadow-md" />
+                    <i class="icon-gacha-banner? w-60 h-28 rounded-xl shadow-md" />
                     <div class="m-3 sm:m-5 flex flex-col items-center sm:items-start gap-3">
                         <CheckboxGroup
                             v-model="gachaCostumeSelects"
@@ -1077,7 +1170,9 @@ function exportAndCopy() {
                                 <InputNumber v-model="purpleConverted" :min="0" />
                             </div>
                             个，至少 {{ purpleConvertedMinTimes }} 格次共
-                            {{ Math.floor(purpleConverted / 4 / 3 * 100) / 100 }}(月卡)/{{ purpleConverted / 2 }}
+                            {{ Math.floor((purpleConverted / 4 / 3) * 100) / 100 }}(月卡)/{{
+                                purpleConverted / 2
+                            }}
                             小时
                         </div>
                     </div>
