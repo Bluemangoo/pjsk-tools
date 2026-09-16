@@ -1027,7 +1027,9 @@ function exportAndCopy() {
                 <div class="px-2 mt-2">
                     <PartH2 level="3"> YOUR MEMORIES GIFT </PartH2>
                 </div>
-                <FlagUnclear class="mb-2" />
+                <FlagUnclear class="mb-2">
+                    注意：本活动每个档位的具体要求并未确定，目前只是编出来占位的。
+                </FlagUnclear>
                 <div v-for="(control, index) in memoryGifts" :key="index" class="my-4">
                     {{ data.memoryGifts[index]!.date }}
                     {{ data.memoryGifts[index]!.details }}
