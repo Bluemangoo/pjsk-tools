@@ -27,7 +27,7 @@ const minGachaGiftStep = computed(() => {
         if (stamp[3] == 1) {
             return 1;
         } else if (stamp[3] == 2) {
-            return 4;
+            return 2;
         }
     }
     return 0;
@@ -122,15 +122,6 @@ const rainbowExchange = reactive(
         return exchange as { [key in keyof typeof data.rainbowExchange]: number };
     })()
 );
-const ptExchange = reactive(
-    (() => {
-        const exchange: { [key: string]: number } = {};
-        for (let key in data.ptExchange) {
-            exchange[key] = 0;
-        }
-        return exchange as { [key in keyof typeof data.ptExchange]: number };
-    })()
-);
 const medalExchange = reactive(
     (() => {
         const exchange: { [key: string]: number } = {};
@@ -170,7 +161,6 @@ function clear() {
         blueExchange,
         purpleExchange,
         rainbowExchange,
-        ptExchange,
         medalExchange
     ];
     for (const target of exchanges) {
@@ -211,7 +201,6 @@ function exportTo(): string {
         blueExchange: filterExchange(blueExchange, data.blueExchange),
         purpleExchange: filterExchange(purpleExchange, data.purpleExchange),
         rainbowExchange: filterExchange(rainbowExchange, data.rainbowExchange),
-        ptExchange: filterExchange(ptExchange, data.ptExchange),
         medalExchange: filterExchange(medalExchange, data.medalExchange)
     };
 
@@ -268,7 +257,6 @@ function importFrom(dataStr: string) {
         { target: blueExchange, source: importData.blueExchange },
         { target: purpleExchange, source: importData.purpleExchange },
         { target: rainbowExchange, source: importData.rainbowExchange },
-        { target: ptExchange, source: importData.ptExchange },
         { target: medalExchange, source: importData.medalExchange }
     ];
 
@@ -312,7 +300,6 @@ watch(
         rainbowExchange,
         purpleConverted,
         rainbowConverted,
-        ptExchange,
         medalExchange
     ],
     () => {
@@ -368,16 +355,6 @@ const rainbowUsedCount = computed(() => {
     for (const key1 in data.rainbowExchange) {
         const key = key1 as keyof typeof data.rainbowExchange;
         count += rainbowExchange[key] * data.rainbowExchange[key].expense;
-    }
-
-    return count;
-});
-const ptUsedCount = computed(() => {
-    let count = 0;
-
-    for (const key1 in data.ptExchange) {
-        const key = key1 as keyof typeof data.ptExchange;
-        count += ptExchange[key] * data.ptExchange[key].expense;
     }
 
     return count;
@@ -624,24 +601,23 @@ const statistics = computed(() => {
         map[mapK].count += rainbowExchange[key] * data.rainbowExchange[key].count;
     }
 
-    for (const key1 in data.ptExchange) {
-        const key = key1 as keyof typeof data.ptExchange;
-        if (ignore.includes(key)) {
-            continue;
-        }
-        const mapK = alias[key] == undefined ? key : alias[key];
-        if (map[mapK] == undefined) {
-            map[mapK] = {
-                icon: data.ptExchange[key].icon,
-                count: 0
-            };
-        }
-        map[mapK].count += ptExchange[key] * data.ptExchange[key].count;
-    }
-
     for (const key in data.medalExchange) {
         for (const item in data.medalExchange[key]!.content) {
             if (ignore.includes(item)) {
+                continue;
+            }
+            if (item == "jemSet") {
+                for (let i = 6; i <= 10; i++) {
+                    const mapK = `material${i}`;
+                    if (map[mapK] == undefined) {
+                        map[mapK] = {
+                            icon: `icon-material${i}`,
+                            count: 0
+                        };
+                    }
+                    map[mapK].count +=
+                        medalExchange[key]! * (data.medalExchange[key] as any).content[item].count;
+                }
                 continue;
             }
             const mapK = alias[item] == undefined ? item : alias[item];
@@ -940,56 +916,6 @@ function toggleUnfoldExtraGacha() {
     unfoldExtraGacha.value = !unfoldExtraGacha.value;
 }
 
-// const rankStepList: { label: string; value: number; tooltip: string }[] = [];
-// for (let i = 1; i <= 3; i++) {
-//     let text = "";
-//     let p = 0;
-//     switch (i) {
-//         case 1:
-//             text = "排行榜 10 万名";
-//             p = 50;
-//             break;
-//         case 2:
-//             text = "排行榜 5 万名";
-//             p = 75;
-//             break;
-//         case 3:
-//             text = "排行榜 1 万名";
-//             p = 100;
-//             break;
-//     }
-//     const tooltip = `${p}<i class="icon-material170" ></i> `;
-//     rankStepList.push({
-//         label: `<div class="block"><div><i class="icon-material170 size-16" ></i></div><div class="text-xs font-medium">${text}</div></div><span
-//             class="absolute right-2 bottom-6 min-w-5 h-5 px-1.5 bg-miku text-white rounded-full text-[0.65rem] font-bold flex items-center justify-center shadow-md border border-white"
-//             >${p}</span
-//         >`,
-//         value: i,
-//         tooltip
-//     });
-// }
-// const rankStepSelect = ref<number[]>([]);
-// const handleStepChange = (payload: {
-//     value: string | number;
-//     checked: boolean;
-//     currentList: (string | number)[];
-// }) => {
-//     if (rankStep.value == payload.value) {
-//         rankStep.value = 0;
-//         rankStepSelect.value = [];
-//         return;
-//     }
-//     rankStep.value = payload.value as number;
-//     rankStepSelect.value = [payload.value as number];
-// };
-// function updateRankStep() {
-//     if (rankStep.value > 0) {
-//         rankStepSelect.value = [rankStep.value];
-//     } else {
-//         rankStepSelect.value = [];
-//     }
-// }
-
 // import export controls
 const importText = ref("");
 const importStat = ref<boolean>();
@@ -1134,10 +1060,10 @@ function exportAndCopy() {
                             <div class="h-6 w-12 my-auto">
                                 <CheckboxSwitch v-model="gachaSelect" :disabled="!!stamp[4]" />
                             </div>
-                            <span v-if="stamp[4]" class="ml-2 font-normal text-sm"
-                                >被集章卡要求锁定了！</span
-                            >
                         </div>
+                        <span v-if="stamp[3]" class="ml-2 font-normal text-sm"
+                            >被集章卡要求锁定了！</span
+                        >
                     </div>
                 </div>
                 <div
@@ -1167,14 +1093,6 @@ function exportAndCopy() {
                         </div>
                     </div>
                 </div>
-                <!--                <div class="px-2">-->
-                <!--                    <PartH2 level="3"> 排行榜 </PartH2>-->
-                <!--                </div>-->
-                <!--                <CheckboxGroup-->
-                <!--                    v-model="rankStepSelect"-->
-                <!--                    :options="rankStepList"-->
-                <!--                    @change="handleStepChange"-->
-                <!--                ></CheckboxGroup>-->
                 <div class="px-2 mt-6">
                     <PartH2 level="3"> 烤森转换器 </PartH2>
                 </div>
@@ -1231,37 +1149,10 @@ function exportAndCopy() {
                 <div class="px-2 mt-6">
                     <PartH2 level="3"> 获取零碎道具 </PartH2>
                 </div>
-                <!-- Combined Box for PT Exchange & My Sekai -->
+                <!-- Combined Box for Live & My Sekai -->
                 <div
                     class="bg-white/40 dark:bg-slate-800/40 p-4 sm:p-6 mb-6 rounded-2xl border border-white/50 dark:border-slate-700/50 shadow-sm flex flex-col md:flex-row gap-6 md:gap-8"
                 >
-                    <!-- PT Exchange (活动兑换所) -->
-                    <!--                    <div class="flex-1 flex flex-col">-->
-                    <!--                        <div-->
-                    <!--                            class="text-base font-bold text-slate-800 dark:text-slate-100 mb-3 ml-1 flex items-center"-->
-                    <!--                        >-->
-                    <!--                            活动兑换所-->
-                    <!--                        </div>-->
-                    <!--                        <div-->
-                    <!--                            class="flex items-center text-sm text-slate-600 dark:text-slate-300 font-medium bg-white/50 dark:bg-slate-900/40 p-3 rounded-xl border border-white/40 dark:border-slate-700/40 shadow-inner mb-3"-->
-                    <!--                        >-->
-                    <!--                            5000 <i class="icon-eventbadge-shiho3 mx-1" /> → 10<i-->
-                    <!--                                class="icon-material170 mx-1"-->
-                    <!--                            />，限15次-->
-                    <!--                        </div>-->
-                    <!--                        <div-->
-                    <!--                            class="flex flex-row items-center mt-auto text-slate-700 dark:text-slate-200 font-bold bg-white/60 dark:bg-slate-900/60 pl-2 pr-4 py-2 rounded-full border border-white/50 dark:border-slate-700/50 shadow-sm w-max"-->
-                    <!--                        >-->
-                    <!--                            <div class="h-8 min-w-24 mr-3">-->
-                    <!--                                <InputNumber v-model="ptExchange.p" :min="0" :max="15" />-->
-                    <!--                            </div>-->
-                    <!--                            <span class="text-slate-400 dark:text-slate-500 mx-1">*</span> 5k-->
-                    <!--                            <i class="icon-eventbadge-shiho3 ml-0.5 mr-2" />-->
-                    <!--                            <span class="text-slate-400 dark:text-slate-500 mr-2">→</span>-->
-                    <!--                            <span class="text-miku text-lg mr-1">{{ ptExchange.p * 10 }}</span>-->
-                    <!--                            <i class="icon-material170 drop-shadow-sm" />-->
-                    <!--                        </div>-->
-                    <!--                    </div>-->
 
                     <!-- Live -->
                     <div class="flex-1 flex flex-col">
@@ -1361,9 +1252,9 @@ function exportAndCopy() {
 
                                     <!-- rewards styling -->
                                     <div
-                                        class="flex flex-wrap justify-center items-center gap-1 sm:gap-2 font-bold text-slate-700 dark:text-slate-200 bg-white/60 dark:bg-slate-900/60 px-3 sm:px-4 py-1.5 sm:py-2 mt-1 sm:mt-2 rounded-full border border-white/50 dark:border-slate-700/50 shadow-inner self-center"
+                                        class="flex flex-wrap justify-center items-center gap-2 sm:gap-3 font-bold text-slate-700 dark:text-slate-200 bg-white/60 dark:bg-slate-900/60 px-3 sm:px-4 py-1.5 sm:py-2 mt-1 sm:mt-2 rounded-full border border-white/50 dark:border-slate-700/50 shadow-inner self-center"
                                     >
-                                        <span
+                                        <template
                                             v-for="(icon, reward) in data.rewardIcon"
                                             :id="reward"
                                         >
@@ -1376,7 +1267,7 @@ function exportAndCopy() {
                                                 }}</span
                                                 ><i class="drop-shadow-sm gap-1" :class="icon" />
                                             </span>
-                                        </span>
+                                        </template>
                                     </div>
                                 </div>
                             </CheckboxSlide>
@@ -1700,11 +1591,13 @@ function exportAndCopy() {
                 <span class="text-miku">
                     金色热潮 fes 招募每次可获得随机量的金牌【1%获得100个，10%获得10个，89%获得1个】
                 </span>
-                <div class="flex flex-col justify-center sm:justify-start gap-4 sm:gap-5 mt-16">
+                <div
+                    class="grid grid-cols-1 lg:grid-cols-2 justify-center sm:justify-start gap-4 sm:gap-5 mt-6"
+                >
                     <button
                         v-for="(item, key) in data.medalExchange"
                         :key="key"
-                        class="flex flex-col items-center justify-center p-3 gap-2 rounded-2xl border-2 transition-all duration-300 active:scale-95 min-w-36 overflow-hidden shadow-sm"
+                        class="flex flex-col items-center justify-center p-3 gap-2 rounded-2xl border-2 transition-all duration-300 active:scale-95 overflow-hidden shadow-sm"
                         :class="
                             medalExchange[key]! > 0
                                 ? 'border-miku bg-miku/10 dark:bg-miku/20 shadow-[0_4px_15px_rgba(51,204,187,0.15)]'
@@ -1712,7 +1605,7 @@ function exportAndCopy() {
                         "
                         @click="medalExchange[key]!++"
                     >
-                        <div class="flex flex-wrap justify-center gap-4 sm:gap-5">
+                        <div class="flex flex-wrap justify-center gap-4 sm:gap-5 px-4 w-max">
                             <div v-for="(reward, rewardKey) in item.content" :key="rewardKey">
                                 <div class="relative drop-shadow-md">
                                     <i :class="reward.icon" class="size-16" />
@@ -1753,77 +1646,6 @@ function exportAndCopy() {
                         </div>
                     </button>
                 </div>
-            </template>
-
-            <template #exchangeBadge>
-                <h2 class="hidden">活动徽章兑换所</h2>
-                <TransitionGroup name="yslide">
-                    <div
-                        class="mt-2 mb-8 bg-white/40 dark:bg-slate-800/40 p-4 rounded-xl border border-white/50 dark:border-slate-700/50 text-slate-700 dark:text-slate-200 font-medium shadow-sm flex flex-wrap items-center gap-y-2 w-full sm:w-max mx-auto sm:mx-0"
-                    >
-                        <span class="mr-2">共消耗</span>
-                        <span class="text-slate-500 dark:text-slate-400 text-lg mx-1 sm:mx-2">{{
-                            ptUsedCount
-                        }}</span>
-                        <i class="icon-eventbadge-shiho3 drop-shadow-sm" />
-                    </div>
-                    <div class="flex flex-wrap justify-center sm:justify-start gap-4 sm:gap-5">
-                        <button
-                            v-for="(item, key) in data.ptExchange"
-                            :key="key"
-                            class="flex flex-col items-center justify-center p-3 gap-2 rounded-2xl border-2 transition-all duration-300 active:scale-95 min-w-36 overflow-hidden shadow-sm"
-                            :class="
-                                ptExchange[key]! > 0
-                                    ? 'border-miku bg-miku/10 dark:bg-miku/20 shadow-[0_4px_15px_rgba(51,204,187,0.15)]'
-                                    : 'bg-white/40 dark:bg-slate-800/40 border-zinc-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:border-miku/50 dark:hover:border-miku/60'
-                            "
-                            @click="ptExchange[key]!++"
-                        >
-                            <div class="relative drop-shadow-md">
-                                <div>
-                                    <Component
-                                        v-if="item.icon.startsWith('chara-')"
-                                        :is="parseCharaIcon(item.icon)"
-                                        class="size-16"
-                                    />
-                                    <i v-else :class="item.icon" class="size-16" />
-                                </div>
-                                <span
-                                    class="absolute -right-2 -bottom-2 min-w-6 h-6 px-1.5 bg-miku text-white rounded-full text-xs font-bold flex items-center justify-center shadow-md border-2 border-white dark:border-slate-800"
-                                    >{{
-                                        ptExchange[key]! > 0
-                                            ? ptExchange[key]! * data.ptExchange[key]!.count
-                                            : data.ptExchange[key]!.count
-                                    }}</span
-                                >
-                            </div>
-                            <div
-                                class="flex items-center text-sm font-bold text-slate-700 dark:text-slate-200 mt-1 bg-white/50 dark:bg-slate-900/50 px-3 py-1 rounded-full border border-white/30 dark:border-slate-700/30"
-                            >
-                                <i class="icon-eventbadge-shiho3 mr-1 drop-shadow-sm" />
-                                {{
-                                    ptExchange[key]! > 0
-                                        ? ptExchange[key]! * data.ptExchange[key]!.expense
-                                        : data.ptExchange[key]!.expense
-                                }}
-                            </div>
-                            <div class="h-8 w-20 mt-1">
-                                <InputNumber
-                                    v-model="ptExchange[key]!"
-                                    :min="0"
-                                    :max="data.ptExchange[key]!.limit"
-                                    @click.stop
-                                />
-                            </div>
-                            <div
-                                v-if="data.ptExchange[key]!.limit !== Infinity"
-                                class="text-[0.7rem] font-bold text-slate-500 dark:text-slate-400 mt-0.5"
-                            >
-                                余 {{ data.ptExchange[key]!.limit - ptExchange[key]! }}
-                            </div>
-                        </button>
-                    </div>
-                </TransitionGroup>
             </template>
 
             <template #materials>

@@ -598,129 +598,6 @@ const rainbowExchange = {
     }
 } satisfies Record<string, exchangeChoice>;
 
-const ptExchange = {
-    shizuku: {
-        count: 1,
-        expense: 30000,
-        limit: 3,
-        icon: "icon-material57"
-    },
-    jewel: {
-        count: 100,
-        expense: 1000,
-        limit: 5,
-        icon: "icon-jewel"
-    },
-    drink: {
-        count: 1,
-        expense: 100,
-        limit: 10,
-        icon: "icon-boost-item1"
-    },
-    exp2: {
-        count: 1,
-        expense: 100,
-        limit: 50,
-        icon: "icon-practice-ticket2"
-    },
-    anvoCardLn: {
-        count: 1,
-        expense: 15000,
-        limit: 2,
-        icon: "icon-material50"
-    },
-    stickerStamp: {
-        count: 1,
-        expense: 5000,
-        limit: 1,
-        icon: "icon-material44"
-    },
-    heartpiece: {
-        count: 5,
-        expense: 1000,
-        limit: 20,
-        icon: "icon-material15"
-    },
-    cloth: {
-        count: 1,
-        expense: 50,
-        limit: 300,
-        icon: "icon-material11"
-    },
-    thread: {
-        count: 1,
-        expense: 500,
-        limit: 30,
-        icon: "icon-material12"
-    },
-    coinSet: {
-        count: 100000,
-        expense: 10000,
-        limit: 1,
-        icon: "icon-coin"
-    },
-    piece2: {
-        count: 100,
-        expense: 500,
-        limit: 10,
-        icon: "icon-material2"
-    },
-    bottle7: {
-        count: 10,
-        expense: 500,
-        limit: 20,
-        icon: "icon-material7"
-    },
-    songCard: {
-        count: 1,
-        expense: 300,
-        limit: 10,
-        icon: "icon-material13"
-    },
-    rainbowBottle: {
-        count: 5,
-        expense: 1000,
-        limit: 20,
-        icon: "icon-material14"
-    },
-    seed: {
-        count: 1,
-        expense: 1000,
-        limit: 10,
-        icon: "icon-material17"
-    },
-    skill2: {
-        count: 1,
-        expense: 5000,
-        limit: 8,
-        icon: "icon-skill-practice-ticket2"
-    },
-    member3: {
-        count: 1,
-        expense: 15000,
-        limit: 1,
-        icon: "icon-material45"
-    },
-    member2: {
-        count: 1,
-        expense: 5000,
-        limit: 1,
-        icon: "icon-material167"
-    },
-    // p: {
-    //     count: 10,
-    //     expense: 5000,
-    //     limit: 15,
-    //     icon: "icon-material170"
-    // },
-    coin: {
-        count: 1,
-        expense: 1,
-        limit: Infinity,
-        icon: "icon-coin"
-    }
-} satisfies Record<string, exchangeChoice>;
-
 type packExchangeChoice = {
     expense: number;
     limit: number;
@@ -753,34 +630,18 @@ const medalExchange: Record<string, packExchangeChoice> = {
                 count: 5,
                 icon: "icon-item-mineral7"
             },
-            memory: {
+            material168: {
                 count: 5,
                 icon: "icon-material168"
             },
-            rainbowBottle: {
+            material14: {
                 count: 100,
                 icon: "icon-material14"
             },
-            bottle6: {
+            jemSet: {
                 count: 1000,
-                icon: "icon-material6"
+                icon: "icon-jem-set"
             },
-            bottle7: {
-                count: 1000,
-                icon: "icon-material7"
-            },
-            bottle8: {
-                count: 1000,
-                icon: "icon-material8"
-            },
-            bottle9: {
-                count: 1000,
-                icon: "icon-material9"
-            },
-            bottle10: {
-                count: 1000,
-                icon: "icon-material10"
-            }
         }
     },
 
@@ -856,6 +717,5 @@ export default {
     blueExchange,
     purpleExchange,
     rainbowExchange,
-    ptExchange,
     medalExchange
 };

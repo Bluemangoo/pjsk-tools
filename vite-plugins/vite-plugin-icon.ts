@@ -71,6 +71,8 @@ function generateIconCSS({
         "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/material_exchange/item_gr_coinset.png";
     icons["coinsmallset"] =
         "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/material_exchange/item_gr_coinsmallset.png";
+    icons["jem-set"] =
+        "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/resource_box/material_jem_set.png";
     icons["jewel"] =
         "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/common_material/jewel.png";
     icons["virtual-coin"] =

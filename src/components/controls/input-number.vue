@@ -30,13 +30,33 @@ watch(
         if (parseFloat(innerStr.value) !== newVal) {
             innerStr.value = newVal.toString();
         }
-        validateAndSync();
     }
 );
 
 const filterInvalid = (val: string) => {
     const match = val.match(/^-?\d*\.?\d*/);
     return match ? match[0] : "";
+};
+
+const isValid = (num: number, rawStr: string) => {
+    if (isNaN(num) || rawStr === "" || rawStr === "-" || rawStr.endsWith(".")) return false;
+    if (num < props.min || num > props.max) return false;
+
+    const parts = rawStr.split(".");
+    if (parts.length > 1 && parts[1]!.length > props.precision) return false;
+
+    const base = isFinite(props.min) ? props.min : 0;
+    const ratio = (num - base) / props.step;
+    return Math.abs(ratio - Math.round(ratio)) < 1e-9;
+};
+
+const processInput = (val: string) => {
+    innerStr.value = val;
+    const num = parseFloat(val);
+    if (isValid(num, val)) {
+        emit("update:modelValue", num);
+        emit("change", num);
+    }
 };
 
 const handleInput = (e: Event) => {
@@ -46,10 +66,7 @@ const handleInput = (e: Event) => {
     if (el.value !== filtered) {
         el.value = filtered;
     }
-    innerStr.value = filtered;
-
-    const num = parseFloat(filtered);
-    emit("update:modelValue", isNaN(num) ? 0 : num);
+    processInput(filtered);
 };
 
 const handlePaste = (e: ClipboardEvent) => {
@@ -63,10 +80,7 @@ const handlePaste = (e: ClipboardEvent) => {
     const nextStr = current.substring(0, start) + filtered + current.substring(end);
 
     const finalFiltered = filterInvalid(nextStr);
-    innerStr.value = finalFiltered;
-
-    const num = parseFloat(finalFiltered);
-    emit("update:modelValue", isNaN(num) ? 0 : num);
+    processInput(finalFiltered);
 };
 
 const validateAndSync = () => {
