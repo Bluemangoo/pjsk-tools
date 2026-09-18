@@ -3,6 +3,7 @@ import EffectLink from "@/components/effects/effect-link.vue";
 import { isDark, toggleDark } from "@/utils/theme.ts";
 import { SunIcon, MoonIcon } from "@heroicons/vue/24/outline";
 import aJump from "@/utils/a-jump.ts";
+import { version } from "@/utils/version.ts";
 </script>
 
 <template>
@@ -32,7 +33,7 @@ import aJump from "@/utils/a-jump.ts";
                     <span
                         class="px-2 py-1 rounded bg-miku/10 text-miku text-[10px] font-bold tracking-widest uppercase border border-miku/20 shadow-sm leading-none opacity-80 group-hover:opacity-100 transition-opacity"
                     >
-                        tools
+                        tools<template v-if="version.isBeta"> beta</template>
                     </span>
                 </EffectLink>
             </div>

@@ -9,6 +9,8 @@ import CheckboxSlide from "@/components/controls/checkbox-slide.vue";
 import { parseCharaIcon } from "@/utils/icon.ts";
 import InputNumber from "@/components/controls/input-number.vue";
 import ButtonNormal from "@/components/controls/button-normal.vue";
+import { version } from "@/utils/version.ts";
+import EffectLink from "@/components/effects/effect-link.vue";
 
 const signIn: FixedLengthArray<number, 7> = [5, 10, 5, 5, 5, 5, 10];
 const signInRewardList = signIn.map((item, index) => {
@@ -275,6 +277,21 @@ function resetLocalStorage() {
             <p>把数据粘贴到对应的文本框再点击导入就可以加载数据啦。</p>
         </div>
         <div class="mb-5" />
+        <PartH2>备注</PartH2>
+        <div v-if="version.isBeta" class="mb-5 w-max">
+            您当前使用的是测试版，可能存在一些问题，如果遇到问题请及时反馈给我们。前往正式版：<EffectLink
+                class="text-miku"
+                href="https://sekaitools.exmeaning.com"
+                >https://sekaitools.exmeaning.com</EffectLink
+            >
+        </div>
+        <div v-if="version.isProduction" class="mb-5 w-max">
+            您当前使用的是正式版。前往测试站：<EffectLink
+                class="text-miku"
+                href="https://pjsk-tools.bluemangoo.net"
+                >https://pjsk-tools.bluemangoo.net</EffectLink
+            >
+        </div>
         <PartH2>修复</PartH2>
         <div class="mb-5 w-max">
             <ButtonNormal class="px-4 py-1" @click="resetLocalStorage">清空本地存储</ButtonNormal>
