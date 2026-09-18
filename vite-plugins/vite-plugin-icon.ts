@@ -51,6 +51,14 @@ function generateIconCSS({
                 `https://storage.exmeaning.com/sekai-jp-assets/mysekai/thumbnail/tool/${type[0]}000${i}_t.png`;
         }
     }
+    for (let i = 1; i <= 10; i++) {
+        icons[`item-mineral${i}`] =
+            `https://storage.exmeaning.com/sekai-jp-assets/mysekai/thumbnail/material/item_mineral_${i}.png`;
+    }
+    for (let i = 1; i <= 4; i++) {
+        icons[`item-plant${i}`] =
+            `https://storage.exmeaning.com/sekai-jp-assets/mysekai/thumbnail/material/item_plant_${i}.png`;
+    }
     icons[`item-blueprint`] =
         `https://storage.exmeaning.com/sekai-jp-assets/mysekai/thumbnail/item/item_blank_blueprint.png`;
     icons[`item-material-storageadd`] =
@@ -133,6 +141,35 @@ function generateIconCSS({
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
+    }
+}
+@utility icon-text-* {
+    container-type: inline-size;
+    
+    @apply icon-base;
+
+    &::after {
+        content: --value([*]);
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-style: normal;
+
+        width: 100%;
+        max-width: calc(var(--cols, 2) * 1.15em);
+        margin: 0 auto;
+        word-break: break-all;
+
+        line-height: 1.25;
+
+        letter-spacing: 0.08em;
+        text-indent: 0.08em;
+
+        font-size: calc(100cqi / var(--cols, 2) * 0.72);
+        font-weight: 400;
+        user-select: none;
     }
 }`;
     for (const [iconName, filePath] of Object.entries(icons)) {

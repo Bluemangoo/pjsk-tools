@@ -492,7 +492,7 @@ const blueExchange = {
         count: 1,
         expense: 500,
         limit: 1,
-        icon: "icon-item-material-storageadd"
+        icon: "icon-text-['家具占位']"
     },
     blueprint: {
         count: 1,
@@ -525,7 +525,7 @@ const purpleExchange = {
         count: 1,
         expense: 300,
         limit: 1,
-        icon: "icon-cos-1_5an"
+        icon: "icon-text-['服装占位']"
     },
     heartcrystal: {
         count: 1,
@@ -721,6 +721,130 @@ const ptExchange = {
     }
 } satisfies Record<string, exchangeChoice>;
 
+type packExchangeChoice = {
+    expense: number;
+    limit: number;
+    content: Record<string, { count: number; icon: string }>;
+};
+
+const medalExchange: Record<string, packExchangeChoice> = {
+    // 300金牌：丰盛园艺礼包
+    gardeningPack: {
+        expense: 300,
+        limit: 1,
+        content: {
+            seed: {
+                count: 250,
+                icon: "icon-material17"
+            },
+            shizuku: {
+                count: 15,
+                icon: "icon-material57"
+            }
+        }
+    },
+
+    // 200金牌：闪亮珠宝礼包
+    jewelryPack: {
+        expense: 200,
+        limit: 1,
+        content: {
+            diamond: {
+                count: 5,
+                icon: "icon-item-mineral7"
+            },
+            memory: {
+                count: 5,
+                icon: "icon-material168"
+            },
+            rainbowBottle: {
+                count: 100,
+                icon: "icon-material14"
+            },
+            bottle6: {
+                count: 1000,
+                icon: "icon-material6"
+            },
+            bottle7: {
+                count: 1000,
+                icon: "icon-material7"
+            },
+            bottle8: {
+                count: 1000,
+                icon: "icon-material8"
+            },
+            bottle9: {
+                count: 1000,
+                icon: "icon-material9"
+            },
+            bottle10: {
+                count: 1000,
+                icon: "icon-material10"
+            }
+        }
+    },
+
+    // 200金牌：大富豪硬币礼包
+    richCoinPack: {
+        expense: 200,
+        limit: 1,
+        content: {
+            coin: {
+                count: 7777777,
+                icon: "icon-coinset"
+            }
+        }
+    },
+
+    // 150金牌：100张技能升级用乐谱（中级）礼包
+    skill2Pack: {
+        expense: 150,
+        limit: 1,
+        content: {
+            skill2: {
+                count: 100,
+                icon: "icon-skill-practice-ticket2"
+            }
+        }
+    },
+
+    // 100金牌：大量硬币礼包
+    largeCoinPack: {
+        expense: 100,
+        limit: 1,
+        content: {
+            coin: {
+                count: 3000000,
+                icon: "icon-coinset"
+            }
+        }
+    },
+
+    // 50金牌：适量金币礼包
+    mediumCoinPack: {
+        expense: 50,
+        limit: 1,
+        content: {
+            coin: {
+                count: 1000000,
+                icon: "icon-coinset"
+            }
+        }
+    },
+
+    // 1金牌：硬币×10000
+    singleCoin: {
+        expense: 1,
+        limit: Infinity,
+        content: {
+            coin: {
+                count: 10000,
+                icon: "icon-coinset"
+            }
+        }
+    }
+};
+
 export default {
     preSignIn,
     signIn,
@@ -732,5 +856,6 @@ export default {
     blueExchange,
     purpleExchange,
     rainbowExchange,
-    ptExchange
+    ptExchange,
+    medalExchange
 };

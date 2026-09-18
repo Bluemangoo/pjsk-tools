@@ -131,6 +131,15 @@ const ptExchange = reactive(
         return exchange as { [key in keyof typeof data.ptExchange]: number };
     })()
 );
+const medalExchange = reactive(
+    (() => {
+        const exchange: { [key: string]: number } = {};
+        for (let key in data.medalExchange) {
+            exchange[key] = 0;
+        }
+        return exchange as { [key in keyof typeof data.medalExchange]: number };
+    })()
+);
 
 // import and export
 function clear() {
@@ -156,7 +165,14 @@ function clear() {
     rainbowConverted.value = false;
     purpleConverted.value = 0;
 
-    const exchanges = [redExchange, blueExchange, purpleExchange, rainbowExchange, ptExchange];
+    const exchanges = [
+        redExchange,
+        blueExchange,
+        purpleExchange,
+        rainbowExchange,
+        ptExchange,
+        medalExchange
+    ];
     for (const target of exchanges) {
         for (const key in target) {
             (target as any)[key] = 0;
@@ -195,7 +211,8 @@ function exportTo(): string {
         blueExchange: filterExchange(blueExchange, data.blueExchange),
         purpleExchange: filterExchange(purpleExchange, data.purpleExchange),
         rainbowExchange: filterExchange(rainbowExchange, data.rainbowExchange),
-        ptExchange: filterExchange(ptExchange, data.ptExchange)
+        ptExchange: filterExchange(ptExchange, data.ptExchange),
+        medalExchange: filterExchange(medalExchange, data.medalExchange)
     };
 
     return JSON.stringify(exportData);
@@ -251,7 +268,8 @@ function importFrom(dataStr: string) {
         { target: blueExchange, source: importData.blueExchange },
         { target: purpleExchange, source: importData.purpleExchange },
         { target: rainbowExchange, source: importData.rainbowExchange },
-        { target: ptExchange, source: importData.ptExchange }
+        { target: ptExchange, source: importData.ptExchange },
+        { target: medalExchange, source: importData.medalExchange }
     ];
 
     for (const { target, source } of exchangeMap) {
@@ -294,7 +312,8 @@ watch(
         rainbowExchange,
         purpleConverted,
         rainbowConverted,
-        ptExchange
+        ptExchange,
+        medalExchange
     ],
     () => {
         const dataStr = exportTo();
@@ -359,6 +378,15 @@ const ptUsedCount = computed(() => {
     for (const key1 in data.ptExchange) {
         const key = key1 as keyof typeof data.ptExchange;
         count += ptExchange[key] * data.ptExchange[key].expense;
+    }
+
+    return count;
+});
+const medalUsedCount = computed(() => {
+    let count = 0;
+
+    for (const key in data.medalExchange) {
+        count += medalExchange[key]! * data.medalExchange[key]!.expense;
     }
 
     return count;
@@ -611,6 +639,23 @@ const statistics = computed(() => {
         map[mapK].count += ptExchange[key] * data.ptExchange[key].count;
     }
 
+    for (const key in data.medalExchange) {
+        for (const item in data.medalExchange[key]!.content) {
+            if (ignore.includes(item)) {
+                continue;
+            }
+            const mapK = alias[item] == undefined ? item : alias[item];
+            if (map[mapK] == undefined) {
+                map[mapK] = {
+                    icon: (data.medalExchange[key] as any).content[item].icon,
+                    count: 0
+                };
+            }
+            map[mapK].count +=
+                medalExchange[key]! * (data.medalExchange[key] as any).content[item].count;
+        }
+    }
+
     const result: typeof map = {};
     for (const key in map) {
         if (map[key] && map[key].count > 0) {
@@ -637,6 +682,7 @@ const statistics = computed(() => {
 const tabs = [
     { key: "collect", label: "收集" },
     { key: "exchangeDrip", label: '<i class="icon-material202" ></i>兑换所' },
+    { key: "exchangeMedal", label: '<i class="icon-material211" ></i>兑换所' },
     // { key: "exchangeBadge", label: '<i class="icon-eventbadge-shiho3" ></i>兑换所' },
     { key: "materials", label: "资源统计" },
     { key: "importExport", label: "导入导出" }
@@ -1098,7 +1144,9 @@ function exportAndCopy() {
                     v-if="unfoldExtraGacha"
                     class="flex flex-col sm:flex-row items-center bg-white/40 dark:bg-slate-800/40 p-3 rounded-2xl border border-white/50 dark:border-slate-700/50 shadow-sm mb-6"
                 >
-                    <i class="icon-gacha-banner? w-60 h-28 rounded-xl shadow-md" />
+                    <i
+                        class="icon-text-['我是阶梯池官方没发图'] [--cols:5] w-60 h-28 rounded-xl shadow-md"
+                    />
                     <div class="m-3 sm:m-5 flex flex-col items-center sm:items-start gap-3">
                         <CheckboxGroup
                             v-model="gachaCostumeSelects"
@@ -1638,6 +1686,75 @@ function exportAndCopy() {
                 </TransitionGroup>
             </template>
 
+            <template #exchangeMedal>
+                <h2 class="hidden">金牌兑换所</h2>
+                <div
+                    class="mt-2 mb-8 bg-white/40 dark:bg-slate-800/40 p-4 rounded-xl border border-white/50 dark:border-slate-700/50 text-slate-700 dark:text-slate-200 font-medium shadow-sm flex flex-wrap items-center gap-y-2 w-full sm:w-max mx-auto sm:mx-0"
+                >
+                    <span class="mr-2">共消耗</span>
+                    <span class="text-slate-500 dark:text-slate-400 text-lg mx-1 sm:mx-2">{{
+                        medalUsedCount
+                    }}</span>
+                    <i class="icon-material211 drop-shadow-sm" />
+                </div>
+                <span class="text-miku">
+                    金色热潮 fes 招募每次可获得随机量的金牌【1%获得100个，10%获得10个，89%获得1个】
+                </span>
+                <div class="flex flex-col justify-center sm:justify-start gap-4 sm:gap-5 mt-16">
+                    <button
+                        v-for="(item, key) in data.medalExchange"
+                        :key="key"
+                        class="flex flex-col items-center justify-center p-3 gap-2 rounded-2xl border-2 transition-all duration-300 active:scale-95 min-w-36 overflow-hidden shadow-sm"
+                        :class="
+                            medalExchange[key]! > 0
+                                ? 'border-miku bg-miku/10 dark:bg-miku/20 shadow-[0_4px_15px_rgba(51,204,187,0.15)]'
+                                : 'bg-white/40 dark:bg-slate-800/40 border-zinc-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:border-miku/50 dark:hover:border-miku/60'
+                        "
+                        @click="medalExchange[key]!++"
+                    >
+                        <div class="flex flex-wrap justify-center gap-4 sm:gap-5">
+                            <div v-for="(reward, rewardKey) in item.content" :key="rewardKey">
+                                <div class="relative drop-shadow-md">
+                                    <i :class="reward.icon" class="size-16" />
+                                    <span
+                                        class="absolute -right-2 -bottom-2 min-w-6 h-6 px-1.5 bg-miku text-white rounded-full text-xs font-bold flex items-center justify-center shadow-md border-2 border-white dark:border-slate-800"
+                                        >{{
+                                            medalExchange[key]! > 0
+                                                ? medalExchange[key]! * reward.count
+                                                : reward.count
+                                        }}</span
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center text-sm font-bold text-slate-700 dark:text-slate-200 mt-1 bg-white/50 dark:bg-slate-900/50 px-3 py-1 rounded-full border border-white/30 dark:border-slate-700/30"
+                        >
+                            <i class="icon-material211 mr-1 drop-shadow-sm" />
+                            {{
+                                medalExchange[key]! > 0
+                                    ? medalExchange[key]! * data.medalExchange[key]!.expense
+                                    : data.medalExchange[key]!.expense
+                            }}
+                        </div>
+                        <div class="h-8 w-20 mt-1">
+                            <InputNumber
+                                v-model="medalExchange[key]!"
+                                :min="0"
+                                :max="data.medalExchange[key]!.limit"
+                                @click.stop
+                            />
+                        </div>
+                        <div
+                            v-if="data.medalExchange[key]!.limit !== Infinity"
+                            class="text-[0.7rem] font-bold text-slate-500 dark:text-slate-400 mt-0.5"
+                        >
+                            余 {{ data.medalExchange[key]!.limit - medalExchange[key]! }}
+                        </div>
+                    </button>
+                </div>
+            </template>
+
             <template #exchangeBadge>
                 <h2 class="hidden">活动徽章兑换所</h2>
                 <TransitionGroup name="yslide">
@@ -1800,16 +1917,16 @@ function exportAndCopy() {
                     <div
                         class="bg-white/40 dark:bg-slate-800/40 py-3 sm:py-4 rounded-xl border border-white/50 dark:border-slate-700/50 text-slate-700 dark:text-slate-200 font-medium shadow-sm grid grid-cols-2 items-center col-span-1 md:col-span-2 lg:col-span-1"
                     >
-                        <!--                        <div class="flex items-center justify-center whitespace-nowrap">-->
-                        <!--                            共消耗-->
-                        <!--                            <span-->
-                        <!--                                class="text-slate-500 dark:text-slate-400 text-[1.05rem] sm:text-lg font-bold mx-1.5"-->
-                        <!--                                >{{ ptUsedCount }}</span-->
-                        <!--                            >-->
-                        <!--                            <i class="icon-eventbadge-shiho3 drop-shadow-sm" />-->
-                        <!--                        </div>-->
+                        <div class="flex items-center justify-center whitespace-nowrap">
+                            共消耗
+                            <span
+                                class="text-slate-500 dark:text-slate-400 text-[1.05rem] sm:text-lg font-bold mx-1.5"
+                                >{{ medalUsedCount }}</span
+                            >
+                            <i class="icon-material211 drop-shadow-sm" />
+                        </div>
                         <div
-                            class="flex items-center justify-center dark:border-slate-600 border-slate-300 whitespace-nowrap"
+                            class="flex items-center justify-center border-l dark:border-slate-600 border-slate-300 whitespace-nowrap"
                         >
                             消耗
                             <span
