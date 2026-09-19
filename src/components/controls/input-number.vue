@@ -24,14 +24,7 @@ const emit = defineEmits(["update:modelValue", "change"]);
 
 const innerStr = ref(props.modelValue.toString());
 
-watch(
-    () => props.modelValue,
-    (newVal) => {
-        if (parseFloat(innerStr.value) !== newVal) {
-            innerStr.value = newVal.toString();
-        }
-    }
-);
+let isInternalUpdate = false;
 
 const filterInvalid = (val: string) => {
     const match = val.match(/^-?\d*\.?\d*/);
@@ -50,15 +43,6 @@ const isValid = (num: number, rawStr: string) => {
     return Math.abs(ratio - Math.round(ratio)) < 1e-9;
 };
 
-const processInput = (val: string) => {
-    innerStr.value = val;
-    const num = parseFloat(val);
-    if (isValid(num, val)) {
-        emit("update:modelValue", num);
-        emit("change", num);
-    }
-};
-
 const handleInput = (e: Event) => {
     const el = e.target as HTMLInputElement;
     const filtered = filterInvalid(el.value);
@@ -66,7 +50,17 @@ const handleInput = (e: Event) => {
     if (el.value !== filtered) {
         el.value = filtered;
     }
-    processInput(filtered);
+    innerStr.value = filtered;
+    const num = parseFloat(filtered);
+
+    if (isValid(num, filtered)) {
+        isInternalUpdate = true;
+        emit("update:modelValue", num);
+        emit("change", num);
+        Promise.resolve().then(() => {
+            isInternalUpdate = false;
+        });
+    }
 };
 
 const handlePaste = (e: ClipboardEvent) => {
@@ -74,17 +68,29 @@ const handlePaste = (e: ClipboardEvent) => {
     const text = e.clipboardData?.getData("text") || "";
     const filtered = filterInvalid(text);
 
-    const start = (e.target as HTMLInputElement).selectionStart || 0;
-    const end = (e.target as HTMLInputElement).selectionEnd || 0;
+    const target = e.target as HTMLInputElement;
+    const start = target.selectionStart || 0;
+    const end = target.selectionEnd || 0;
     const current = innerStr.value;
     const nextStr = current.substring(0, start) + filtered + current.substring(end);
 
     const finalFiltered = filterInvalid(nextStr);
-    processInput(finalFiltered);
+    target.value = finalFiltered;
+    innerStr.value = finalFiltered;
+    const num = parseFloat(finalFiltered);
+
+    if (isValid(num, finalFiltered)) {
+        isInternalUpdate = true;
+        emit("update:modelValue", num);
+        emit("change", num);
+        Promise.resolve().then(() => {
+            isInternalUpdate = false;
+        });
+    }
 };
 
-const validateAndSync = () => {
-    let num = parseFloat(innerStr.value);
+const validateAndSync = (val?: number) => {
+    let num = typeof val === "number" ? val : parseFloat(innerStr.value);
     if (isNaN(num)) num = 0;
 
     num = Math.max(props.min, Math.min(props.max, num));
@@ -95,9 +101,28 @@ const validateAndSync = () => {
 
     const finalVal = parseFloat(num.toFixed(props.precision));
     innerStr.value = finalVal.toString();
+    isInternalUpdate = true;
     emit("update:modelValue", finalVal);
     emit("change", finalVal);
+    Promise.resolve().then(() => {
+        isInternalUpdate = false;
+    });
 };
+const handleValidate = () => {
+    validateAndSync();
+};
+
+watch(
+    () => props.modelValue,
+    (newVal) => {
+        if (isInternalUpdate) return;
+        if (parseFloat(innerStr.value) !== newVal) {
+            innerStr.value = newVal.toString();
+        }
+        validateAndSync(newVal);
+    },
+    { immediate: true }
+);
 
 const changeStep = (delta: number) => {
     if (props.disabled) return;
@@ -137,8 +162,8 @@ const isMax = computed(() => (parseFloat(innerStr.value) || 0) >= props.max);
             spellcheck="false"
             @input="handleInput"
             @paste="handlePaste"
-            @blur="validateAndSync"
-            @keydown.enter="validateAndSync"
+            @blur="handleValidate"
+            @keydown.enter="handleValidate()"
             class="flex-1 w-0 h-full text-center bg-transparent border-none outline-none text-zinc-700 dark:text-zinc-200 font-[inherit]"
         />
 

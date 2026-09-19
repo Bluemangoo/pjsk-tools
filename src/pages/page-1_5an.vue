@@ -1605,7 +1605,7 @@ function exportAndCopy() {
                         "
                         @click="medalExchange[key]!++"
                     >
-                        <div class="flex flex-wrap justify-center gap-4 sm:gap-5 px-4 w-max">
+                        <div class="flex flex-wrap justify-center gap-4 sm:gap-5 px-4">
                             <div v-for="(reward, rewardKey) in item.content" :key="rewardKey">
                                 <div class="relative drop-shadow-md">
                                     <i :class="reward.icon" class="size-16" />

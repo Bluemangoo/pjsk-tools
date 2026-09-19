@@ -31,9 +31,9 @@ import { version } from "@/utils/version.ts";
                         "
                     ></div>
                     <span
-                        class="px-2 py-1 rounded bg-miku/10 text-miku text-[10px] font-bold tracking-widest uppercase border border-miku/20 shadow-sm leading-none opacity-80 group-hover:opacity-100 transition-opacity"
+                        class="px-2 py-1 rounded bg-miku/10 text-miku text-[10px] font-bold tracking-widest border border-miku/20 shadow-sm leading-none opacity-80 group-hover:opacity-100 transition-opacity"
                     >
-                        tools<template v-if="version.isBeta"> beta</template>
+                        TOOLS<sup v-if="version.isBeta">β</sup>
                     </span>
                 </EffectLink>
             </div>
