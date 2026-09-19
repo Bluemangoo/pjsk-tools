@@ -156,13 +156,7 @@ function clear() {
     rainbowConverted.value = false;
     purpleConverted.value = 0;
 
-    const exchanges = [
-        redExchange,
-        blueExchange,
-        purpleExchange,
-        rainbowExchange,
-        medalExchange
-    ];
+    const exchanges = [redExchange, blueExchange, purpleExchange, rainbowExchange, medalExchange];
     for (const target of exchanges) {
         for (const key in target) {
             (target as any)[key] = 0;
@@ -1026,15 +1020,18 @@ function exportAndCopy() {
                             共 6 个池子。
                         </div>
                         <div
-                            class="flex flex-row items-center gap-3 w-max font-bold text-slate-700 dark:text-slate-200 bg-white/60 dark:bg-slate-900/60 px-4 py-2 rounded-full border border-white/50 dark:border-slate-700/50 shadow-inner"
+                            class="flex flex-row items-center gap-3 w-max font-bold px-4 inline-block align-middle leading-12 sm:leading-none"
                         >
-                            <div class="h-8 min-w-24">
+                            <div class="h-8 w-24 inline-block align-middle leading-none">
                                 <InputNumber v-model="gachaGift" :min="minGachaGiftStep" :max="6" />
                             </div>
-                            * 3000 付费<i class="icon-jewel mx-1" /> → {{ gachaGift }} * 50 =
-                            {{ gachaGift * 50 }}<i class="icon-material202 mx-1" />
-                            <span v-if="stamp[4]" class="ml-2 font-normal text-sm"
-                                >被集章卡要求锁定了！</span
+                            <span>
+                                * 3000 付费<i class="icon-jewel mx-1" /><br class="sm:hidden" />
+                                → {{ gachaGift }} * 50 = {{ gachaGift * 50
+                                }}<i class="icon-material202 mx-1" />
+                                <span v-if="stamp[4]" class="ml-2 font-normal text-sm"
+                                    >被集章卡要求锁定了！</span
+                                ></span
                             >
                         </div>
                     </div>
@@ -1131,12 +1128,13 @@ function exportAndCopy() {
                         </div>
                         <div class="mb-3">一次最多合成 100 个，需要 15(月卡)/30 分钟</div>
                         <div
-                            class="flex flex-row items-center mt-auto font-bold pl-2 pr-4 py-2 w-max"
+                            class="flex flex-row items-center mt-auto font-bold pl-2 pr-4 py-2 w-max inline-block leading-12 sm:leading-none"
                         >
                             转换
-                            <div class="h-8 min-w-28 mx-2">
+                            <div class="h-8 w-28 mx-2 inline-block align-middle leading-none">
                                 <InputNumber v-model="purpleConverted" :min="0" />
                             </div>
+                            <br class="sm:hidden" />
                             个，至少 {{ purpleConvertedMinTimes }} 格次共
                             {{ Math.floor((purpleConverted / 4 / 3) * 100) / 100 }}(月卡)/{{
                                 purpleConverted / 2
@@ -1153,7 +1151,6 @@ function exportAndCopy() {
                 <div
                     class="bg-white/40 dark:bg-slate-800/40 p-4 sm:p-6 mb-6 rounded-2xl border border-white/50 dark:border-slate-700/50 shadow-sm flex flex-col md:flex-row gap-6 md:gap-8"
                 >
-
                     <!-- Live -->
                     <div class="flex-1 flex flex-col">
                         <div
@@ -1168,14 +1165,15 @@ function exportAndCopy() {
                             <i class="icon-material200 shrink-0 ml-1" />
                         </div>
                         <div
-                            class="flex flex-row items-center mt-auto font-bold pl-2 pr-4 py-2 w-max"
+                            class="flex flex-row items-center mt-auto font-bold pl-2 pr-4 py-2 w-max inline-block align-middle leading-12 sm:leading-none"
                         >
                             <span class="mr-2">累计产出</span>
-                            <div class="h-8 min-w-28 mr-3">
+                            <div class="h-8 min-w-28 mr-3 inline-block align-middle leading-none">
                                 <InputNumber v-model="live" :min="0" />
                             </div>
                             <i class="icon-material200 drop-shadow-sm" />
-                            ，需要约 {{ live / 5 }}
+                            ，
+                            <br class="sm:hidden" />需要约 {{ live / 5 }}
                             <i class="icon-boost-item1 drop-shadow-sm" />
                         </div>
                     </div>
