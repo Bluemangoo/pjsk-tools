@@ -1318,7 +1318,7 @@ function exportAndCopy() {
                     </div>
                     <div class="flex flex-wrap gap-3">
                         <div
-                            class="mt-2 mb-8 bg-white/40 dark:bg-slate-800/40 p-4 rounded-xl border border-white/50 dark:border-slate-700/50 text-slate-700 dark:text-slate-200 font-medium shadow-sm flex flex-wrap items-center gap-y-2 w-full sm:w-max mx-auto sm:mx-0"
+                            class="mt-2 lg:mb-8 bg-white/40 dark:bg-slate-800/40 p-4 rounded-xl border border-white/50 dark:border-slate-700/50 text-slate-700 dark:text-slate-200 font-medium shadow-sm flex flex-wrap items-center gap-y-2 w-full sm:w-max mx-auto sm:mx-0"
                         >
                             <span class="mr-2">共获得</span>
                             <span class="text-miku text-lg mx-1 sm:mx-2">{{ redGotCount }}</span>
@@ -1330,7 +1330,7 @@ function exportAndCopy() {
                             <i class="icon-material200 drop-shadow-sm" />
                         </div>
                         <div
-                            class="mt-2 mb-8 bg-white/40 dark:bg-slate-800/40 p-4 rounded-xl border border-white/50 dark:border-slate-700/50 text-slate-700 dark:text-slate-200 font-medium shadow-sm flex flex-wrap items-center gap-y-2 w-full sm:w-max mx-auto sm:mx-0"
+                            class="mt-2 lg:mb-8 bg-white/40 dark:bg-slate-800/40 p-4 rounded-xl border border-white/50 dark:border-slate-700/50 text-slate-700 dark:text-slate-200 font-medium shadow-sm flex flex-wrap items-center gap-y-2 w-full sm:w-max mx-auto sm:mx-0"
                         >
                             <span class="mr-2">共获得</span>
                             <span class="text-miku text-lg mx-1 sm:mx-2">{{ blueGotCount }}</span>
@@ -1342,7 +1342,7 @@ function exportAndCopy() {
                             <i class="icon-material201 drop-shadow-sm" />
                         </div>
                         <div
-                            class="mt-2 mb-8 bg-white/40 dark:bg-slate-800/40 p-4 rounded-xl border border-white/50 dark:border-slate-700/50 text-slate-700 dark:text-slate-200 font-medium shadow-sm flex flex-wrap items-center gap-y-2 w-full sm:w-max mx-auto sm:mx-0"
+                            class="mt-2 lg:mb-8 bg-white/40 dark:bg-slate-800/40 p-4 rounded-xl border border-white/50 dark:border-slate-700/50 text-slate-700 dark:text-slate-200 font-medium shadow-sm flex flex-wrap items-center gap-y-2 w-full sm:w-max mx-auto sm:mx-0"
                         >
                             <span class="mr-2">共获得</span>
                             <span class="text-miku text-lg mx-1 sm:mx-2">{{ purpleGotCount }}</span>
