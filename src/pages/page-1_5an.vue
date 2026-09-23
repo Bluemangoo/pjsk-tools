@@ -1608,7 +1608,7 @@ function exportAndCopy() {
 
             <template #exchangeMedal>
                 <h2 class="hidden">金牌兑换所</h2>
-                <div class="flex flex-nowrap mt-2 mb-8">
+                <div class="flex flex-col lg:flex-row flex-nowrap mt-2 mb-8">
                     <div
                         class="bg-white/40 dark:bg-slate-800/40 p-4 rounded-xl border border-white/50 dark:border-slate-700/50 text-slate-700 dark:text-slate-200 font-medium shadow-sm flex flex-wrap items-center gap-y-2 w-full sm:w-max mx-auto sm:mx-0"
                     >
@@ -1618,7 +1618,7 @@ function exportAndCopy() {
                         }}</span>
                         <i class="icon-material211 drop-shadow-sm" />
                     </div>
-                    <div class="flex flex-nowrap ml-auto my-auto">
+                    <div class="flex flex-nowrap lg:ml-auto lg:my-auto">
                         显示礼包图标
                         <CheckboxSwitch
                             v-model="settings.showMedalExchangeSet"
