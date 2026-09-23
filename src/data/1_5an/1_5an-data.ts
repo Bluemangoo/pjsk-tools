@@ -48,7 +48,7 @@ const rewardIcon = {
     material132: "icon-material132"
 };
 
-const preSignIn: FixedLengthArray<Rewards, 3>=[
+const preSignIn: FixedLengthArray<Rewards, 3> = [
     {
         drinkL: 1,
         material14: 50,
@@ -598,17 +598,19 @@ const rainbowExchange = {
     }
 } satisfies Record<string, exchangeChoice>;
 
-type packExchangeChoice = {
+type setExchangeChoice = {
     expense: number;
     limit: number;
+    icon: string;
     content: Record<string, { count: number; icon: string }>;
 };
 
-const medalExchange: Record<string, packExchangeChoice> = {
+const medalExchange: Record<string, setExchangeChoice> = {
     // 300金牌：丰盛园艺礼包
-    gardeningPack: {
+    gardeningSet: {
         expense: 300,
         limit: 1,
+        icon: "icon-gardeningset",
         content: {
             seed: {
                 count: 250,
@@ -622,9 +624,10 @@ const medalExchange: Record<string, packExchangeChoice> = {
     },
 
     // 200金牌：闪亮珠宝礼包
-    jewelryPack: {
+    kirakiraSet: {
         expense: 200,
         limit: 1,
+        icon: "icon-kirakiraset",
         content: {
             diamond: {
                 count: 5,
@@ -641,26 +644,15 @@ const medalExchange: Record<string, packExchangeChoice> = {
             jemSet: {
                 count: 1000,
                 icon: "icon-jem-set"
-            },
-        }
-    },
-
-    // 200金牌：大富豪硬币礼包
-    richCoinPack: {
-        expense: 200,
-        limit: 1,
-        content: {
-            coin: {
-                count: 7777777,
-                icon: "icon-coinset"
             }
         }
     },
 
     // 150金牌：100张技能升级用乐谱（中级）礼包
-    skill2Pack: {
+    skillPracticeSet: {
         expense: 150,
         limit: 1,
+        icon: "icon-skillpracticeset",
         content: {
             skill2: {
                 count: 100,
@@ -669,26 +661,41 @@ const medalExchange: Record<string, packExchangeChoice> = {
         }
     },
 
-    // 100金牌：大量硬币礼包
-    largeCoinPack: {
-        expense: 100,
+    // 200金牌：大富豪硬币礼包
+    coinSet: {
+        expense: 200,
         limit: 1,
+        icon: "icon-coinset",
         content: {
             coin: {
-                count: 3000000,
+                count: 7777777,
                 icon: "icon-coinset"
             }
         }
     },
 
+    // 100金牌：大量硬币礼包
+    coinMiddleSet: {
+        expense: 100,
+        limit: 1,
+        icon: "icon-coinmiddleset",
+        content: {
+            coin: {
+                count: 3000000,
+                icon: "icon-coinmiddleset"
+            }
+        }
+    },
+
     // 50金牌：适量金币礼包
-    mediumCoinPack: {
+    coinSmallSet: {
         expense: 50,
         limit: 1,
+        icon: "icon-coinsmallset",
         content: {
             coin: {
                 count: 1000000,
-                icon: "icon-coinset"
+                icon: "icon-coinsmallset"
             }
         }
     },
@@ -697,10 +704,11 @@ const medalExchange: Record<string, packExchangeChoice> = {
     singleCoin: {
         expense: 1,
         limit: Infinity,
+        icon: "icon-coin",
         content: {
             coin: {
                 count: 10000,
-                icon: "icon-coinset"
+                icon: "icon-coin"
             }
         }
     }

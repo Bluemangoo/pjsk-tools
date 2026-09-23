@@ -24,8 +24,6 @@ const emit = defineEmits(["update:modelValue", "change"]);
 
 const innerStr = ref(props.modelValue.toString());
 
-let isInternalUpdate = false;
-
 const filterInvalid = (val: string) => {
     const match = val.match(/^-?\d*\.?\d*/);
     return match ? match[0] : "";
@@ -43,6 +41,19 @@ const isValid = (num: number, rawStr: string) => {
     return Math.abs(ratio - Math.round(ratio)) < 1e-9;
 };
 
+const getNormalizedVal = (val?: number): number => {
+    let num = typeof val === "number" ? val : parseFloat(innerStr.value);
+    if (isNaN(num)) num = 0;
+
+    num = Math.max(props.min, Math.min(props.max, num));
+
+    const base = isFinite(props.min) ? props.min : 0;
+    const gap = Math.round((num - base) / props.step);
+    num = base + gap * props.step;
+
+    return parseFloat(num.toFixed(props.precision));
+};
+
 const handleInput = (e: Event) => {
     const el = e.target as HTMLInputElement;
     const filtered = filterInvalid(el.value);
@@ -54,12 +65,8 @@ const handleInput = (e: Event) => {
     const num = parseFloat(filtered);
 
     if (isValid(num, filtered)) {
-        isInternalUpdate = true;
         emit("update:modelValue", num);
         emit("change", num);
-        Promise.resolve().then(() => {
-            isInternalUpdate = false;
-        });
     }
 };
 
@@ -80,46 +87,26 @@ const handlePaste = (e: ClipboardEvent) => {
     const num = parseFloat(finalFiltered);
 
     if (isValid(num, finalFiltered)) {
-        isInternalUpdate = true;
         emit("update:modelValue", num);
         emit("change", num);
-        Promise.resolve().then(() => {
-            isInternalUpdate = false;
-        });
     }
 };
 
-const validateAndSync = (val?: number) => {
-    let num = typeof val === "number" ? val : parseFloat(innerStr.value);
-    if (isNaN(num)) num = 0;
-
-    num = Math.max(props.min, Math.min(props.max, num));
-
-    const base = isFinite(props.min) ? props.min : 0;
-    const gap = Math.round((num - base) / props.step);
-    num = base + gap * props.step;
-
-    const finalVal = parseFloat(num.toFixed(props.precision));
-    innerStr.value = finalVal.toString();
-    isInternalUpdate = true;
-    emit("update:modelValue", finalVal);
-    emit("change", finalVal);
-    Promise.resolve().then(() => {
-        isInternalUpdate = false;
-    });
-};
 const handleValidate = () => {
-    validateAndSync();
+    const finalVal = getNormalizedVal();
+    innerStr.value = finalVal.toString();
+    if (props.modelValue !== finalVal) {
+        emit("update:modelValue", finalVal);
+        emit("change", finalVal);
+    }
 };
 
 watch(
     () => props.modelValue,
     (newVal) => {
-        if (isInternalUpdate) return;
         if (parseFloat(innerStr.value) !== newVal) {
-            innerStr.value = newVal.toString();
+            innerStr.value = (newVal ?? 0).toString();
         }
-        validateAndSync(newVal);
     },
     { immediate: true }
 );
@@ -127,8 +114,10 @@ watch(
 const changeStep = (delta: number) => {
     if (props.disabled) return;
     const current = parseFloat(innerStr.value) || 0;
-    innerStr.value = (current + delta).toString();
-    validateAndSync();
+    const finalVal = getNormalizedVal(current + delta);
+    innerStr.value = finalVal.toString();
+    emit("update:modelValue", finalVal);
+    emit("change", finalVal);
 };
 
 const isMin = computed(() => (parseFloat(innerStr.value) || 0) <= props.min);

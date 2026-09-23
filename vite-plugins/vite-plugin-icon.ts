@@ -69,8 +69,18 @@ function generateIconCSS({
         "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/common_event/heart/icon_heartpiece.png";
     icons["coinset"] =
         "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/material_exchange/item_gr_coinset.png";
+    icons["coinmiddleset"] =
+        "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/material_exchange/item_gr_coinmiddleset.png";
     icons["coinsmallset"] =
         "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/material_exchange/item_gr_coinsmallset.png";
+    icons["boostitemset"] =
+        "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/material_exchange/item_gr_boostitemset.png";
+    icons["gardeningset"] =
+        "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/material_exchange/item_gr_gardeningset.png";
+    icons["kirakiraset"] =
+        "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/material_exchange/item_gr_kirakiraset.png";
+    icons["skillpracticeset"] =
+        "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/material_exchange/item_gr_skillpracticeset.png";
     icons["jem-set"] =
         "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/resource_box/material_jem_set.png";
     icons["jewel"] =

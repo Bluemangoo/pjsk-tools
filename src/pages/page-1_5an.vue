@@ -72,7 +72,6 @@ const gachaCostume = computed({
         gachaCostumeStepValue.value = value;
     }
 });
-// const rankStep = ref(0);
 const live = ref(0);
 const mySekai = ref(0);
 const stamp: Reactive<(number | undefined)[]> = reactive([]);
@@ -131,6 +130,9 @@ const medalExchange = reactive(
         return exchange as { [key in keyof typeof data.medalExchange]: number };
     })()
 );
+const settings = reactive({
+    showMedalExchangeSet: false
+});
 
 // import and export
 function clear() {
@@ -162,6 +164,8 @@ function clear() {
             (target as any)[key] = 0;
         }
     }
+
+    settings.showMedalExchangeSet = false;
 }
 function exportTo(): string {
     const filterExchange = (
@@ -195,7 +199,8 @@ function exportTo(): string {
         blueExchange: filterExchange(blueExchange, data.blueExchange),
         purpleExchange: filterExchange(purpleExchange, data.purpleExchange),
         rainbowExchange: filterExchange(rainbowExchange, data.rainbowExchange),
-        medalExchange: filterExchange(medalExchange, data.medalExchange)
+        medalExchange: filterExchange(medalExchange, data.medalExchange),
+        settings
     };
 
     return JSON.stringify(exportData);
@@ -263,6 +268,8 @@ function importFrom(dataStr: string) {
             }
         }
     }
+
+    settings.showMedalExchangeSet = Boolean(importData?.settings?.showMedalExchangeSet);
 }
 onMounted(() => {
     const savedData = localStorage.getItem("1_5an-collection");
@@ -294,7 +301,8 @@ watch(
         rainbowExchange,
         purpleConverted,
         rainbowConverted,
-        medalExchange
+        medalExchange,
+        settings
     ],
     () => {
         const dataStr = exportTo();
@@ -910,6 +918,26 @@ function toggleUnfoldExtraGacha() {
     unfoldExtraGacha.value = !unfoldExtraGacha.value;
 }
 
+// auto get
+async function autoFill() {
+    const needConvert = rainbowUsedCount.value - rainbowGotCount.value;
+    if (needConvert > 0) {
+        rainbowConverted.value = true;
+    }
+    const needConvertPurple = purpleUsedCount.value - purpleGotCount.value;
+    if (needConvertPurple > 0) {
+        purpleConverted.value += needConvertPurple;
+    }
+    const needRed = redUsedCount.value - redGotCount.value;
+    if (needRed > 0) {
+        live.value += needRed;
+    }
+    const needBlue = blueUsedCount.value - blueGotCount.value;
+    if (needBlue > 0) {
+        mySekai.value += Math.ceil(needBlue / 30) * 30;
+    }
+}
+
 // import export controls
 const importText = ref("");
 const importStat = ref<boolean>();
@@ -1340,8 +1368,11 @@ function exportAndCopy() {
                             <i class="icon-material203 drop-shadow-sm" />
                         </div>
                     </div>
+                    <ButtonNormal class="w-max px-4 py-2" type="secondary" @click="autoFill"
+                        >自动补足所需资源</ButtonNormal
+                    >
 
-                    <div class="flex flex-wrap justify-center sm:justify-start gap-4 sm:gap-5 mt-4">
+                    <div class="flex flex-wrap justify-center sm:justify-start gap-4 sm:gap-5 mt-6">
                         <button
                             v-for="(item, key) in data.redExchange"
                             :key="key"
@@ -1577,20 +1608,34 @@ function exportAndCopy() {
 
             <template #exchangeMedal>
                 <h2 class="hidden">金牌兑换所</h2>
-                <div
-                    class="mt-2 mb-8 bg-white/40 dark:bg-slate-800/40 p-4 rounded-xl border border-white/50 dark:border-slate-700/50 text-slate-700 dark:text-slate-200 font-medium shadow-sm flex flex-wrap items-center gap-y-2 w-full sm:w-max mx-auto sm:mx-0"
-                >
-                    <span class="mr-2">共消耗</span>
-                    <span class="text-slate-500 dark:text-slate-400 text-lg mx-1 sm:mx-2">{{
-                        medalUsedCount
-                    }}</span>
-                    <i class="icon-material211 drop-shadow-sm" />
+                <div class="flex flex-nowrap mt-2 mb-8">
+                    <div
+                        class="bg-white/40 dark:bg-slate-800/40 p-4 rounded-xl border border-white/50 dark:border-slate-700/50 text-slate-700 dark:text-slate-200 font-medium shadow-sm flex flex-wrap items-center gap-y-2 w-full sm:w-max mx-auto sm:mx-0"
+                    >
+                        <span class="mr-2">共消耗</span>
+                        <span class="text-slate-500 dark:text-slate-400 text-lg mx-1 sm:mx-2">{{
+                            medalUsedCount
+                        }}</span>
+                        <i class="icon-material211 drop-shadow-sm" />
+                    </div>
+                    <div class="flex flex-nowrap ml-auto my-auto">
+                        显示礼包图标
+                        <CheckboxSwitch
+                            v-model="settings.showMedalExchangeSet"
+                            class="h-6 w-12 ml-3"
+                        />
+                    </div>
                 </div>
                 <span class="text-miku">
                     金色热潮 fes 招募每次可获得随机量的金牌【1%获得100个，10%获得10个，89%获得1个】
                 </span>
                 <div
-                    class="grid grid-cols-1 lg:grid-cols-2 justify-center sm:justify-start gap-4 sm:gap-5 mt-6"
+                    class="justify-center sm:justify-start gap-4 sm:gap-5 mt-6"
+                    :class="
+                        settings.showMedalExchangeSet
+                            ? 'flex flex-wrap'
+                            : 'grid grid-cols-1 lg:grid-cols-2'
+                    "
                 >
                     <button
                         v-for="(item, key) in data.medalExchange"
@@ -1603,8 +1648,23 @@ function exportAndCopy() {
                         "
                         @click="medalExchange[key]!++"
                     >
-                        <div class="flex flex-wrap justify-center gap-4 sm:gap-5 px-4">
-                            <div v-for="(reward, rewardKey) in item.content" :key="rewardKey">
+                        <div class="flex flex-wrap justify-center gap-4 sm:gap-5 px-6">
+                            <div v-if="settings.showMedalExchangeSet">
+                                <div class="relative drop-shadow-md">
+                                    <i :class="item.icon" class="size-16" />
+                                    <span
+                                        class="absolute -right-2 -bottom-2 min-w-6 h-6 px-1.5 bg-miku text-white rounded-full text-xs font-bold flex items-center justify-center shadow-md border-2 border-white dark:border-slate-800"
+                                        >{{
+                                            medalExchange[key]! > 0 ? medalExchange[key]! : 1
+                                        }}</span
+                                    >
+                                </div>
+                            </div>
+                            <div
+                                v-else
+                                v-for="(reward, rewardKey) in item.content"
+                                :key="rewardKey"
+                            >
                                 <div class="relative drop-shadow-md">
                                     <i :class="reward.icon" class="size-16" />
                                     <span
@@ -1761,6 +1821,19 @@ function exportAndCopy() {
                     </div>
                 </div>
 
+                <PartH2 level="3">已计入的购买的礼包和通行证</PartH2>
+                <div class="text-lg bold mb-4 pl-6">
+                    <div v-if="stamp[3] == 1">
+                        <li class="align-middle">1种周年set (1500 付费<i class="icon-jewel" />)</li>
+                        <li class="align-middle">10 月份的白金通行证或烤森通行证</li>
+                    </div>
+                    <div v-if="stamp[3] == 2">
+                        <li class="align-middle">
+                            2 种周年 set (1500 + 3000 付费<i class="icon-jewel" />)
+                        </li>
+                        <li class="align-middle">10 月份的白金通行证或烤森通行证</li>
+                    </div>
+                </div>
                 <PartH2 level="3">获得的资源</PartH2>
                 <div class="flex flex-wrap justify-center sm:justify-start gap-4 sm:gap-5 pb-8">
                     <div
