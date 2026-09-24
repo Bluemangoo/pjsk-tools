@@ -378,7 +378,7 @@ const paidJewelUsedCount = computed(() => {
     if (gachaSelect.value) {
         count += 3000;
     }
-    const stampLevel = stamp[4];
+    const stampLevel = stamp[3];
     if (stampLevel == 1) {
         count += 1500; //  1种周年set
     }
@@ -1057,11 +1057,11 @@ function exportAndCopy() {
                                 * 3000 付费<i class="icon-jewel mx-1" /><br class="sm:hidden" />
                                 → {{ gachaGift }} * 50 = {{ gachaGift * 50
                                 }}<i class="icon-material202 mx-1" />
-                                <span v-if="stamp[4]" class="ml-2 font-normal text-sm"
-                                    >被集章卡要求锁定了！</span
-                                ></span
-                            >
+                            </span>
                         </div>
+                        <span v-if="stamp[3]" class="ml-2 font-normal text-sm">
+                            被集章卡要求锁定了！
+                        </span>
                     </div>
                 </div>
                 <div class="text-miku mb-4 cursor-pointer" @click="toggleUnfoldExtraGacha">
@@ -1083,7 +1083,7 @@ function exportAndCopy() {
                         >
                             <span class="mr-2">我要抽！</span>
                             <div class="h-6 w-12 my-auto">
-                                <CheckboxSwitch v-model="gachaSelect" :disabled="!!stamp[4]" />
+                                <CheckboxSwitch v-model="gachaSelect" :disabled="!!stamp[3]" />
                             </div>
                         </div>
                         <span v-if="stamp[3]" class="ml-2 font-normal text-sm"
