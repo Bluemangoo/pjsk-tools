@@ -1161,8 +1161,7 @@ function exportAndCopy() {
                             <div class="h-8 w-28 mx-2 inline-block align-middle leading-none">
                                 <InputNumber v-model="purpleConverted" :min="0" />
                             </div>
-                            <br class="sm:hidden" />
-                            个，至少 {{ purpleConvertedMinTimes }} 格次共
+                            个，<br class="sm:hidden" />至少 {{ purpleConvertedMinTimes }} 格次共
                             {{ Math.floor((purpleConverted / 4 / 3) * 100) / 100 }}(月卡)/{{
                                 purpleConverted / 2
                             }}
@@ -1620,7 +1619,7 @@ function exportAndCopy() {
                         }}</span>
                         <i class="icon-material211 drop-shadow-sm" />
                     </div>
-                    <div class="flex flex-nowrap lg:ml-auto lg:my-auto">
+                    <div class="flex flex-nowrap mt-4 lg:ml-auto lg:my-auto">
                         显示礼包图标
                         <CheckboxSwitch
                             v-model="settings.showMedalExchangeSet"
