@@ -345,7 +345,7 @@ const stamp: {
         ]
     },
     {
-        description: "挑战任务",
+        description: "体验卡",
         level: [
             {
                 require: "完成全部子任务",
@@ -388,7 +388,7 @@ const stamp: {
                 extra: [
                     "多人演出中5人全员FC 5次",
                     "达成Super Fever 15次",
-                    "获得MVP或SUPER STAR（多人演出结算时分数最高者）10次",
+                    "获得MVP或SUPER STAR（多人演出结算时分数最高者）或ACE（目前无法获得）10次",
                     "完成30首不同的歌曲",
                     "累计消耗300点演出能量",
                     "累计获得300w活动pt",

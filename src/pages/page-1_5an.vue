@@ -817,10 +817,10 @@ const memoryGifts = reactive(
             }
 
             return {
-                label: `<div class="block"><div><i class="${firstReward.icon} size-16"></i></div><div class="text-xs font-medium">${item.text}</div></div><span
+                label: `<div class="block"><div><i class="${firstReward.icon} size-16"></i></div><div class="text-xs font-medium">#${index + 1}</div></div><span
             class="absolute right-2 bottom-6 min-w-5 h-5 px-1.5 bg-miku text-white rounded-full text-[0.65rem] font-bold flex items-center justify-center shadow-md border border-white"
             >${firstReward.count}</span
-        >`,
+        >`, // #${index + 1} -> ${item.text}
                 value: index,
                 tooltip
             };
@@ -1021,9 +1021,7 @@ function exportAndCopy() {
                 <div class="px-2 mt-2">
                     <PartH2 level="3"> YOUR MEMORIES GIFT </PartH2>
                 </div>
-                <FlagUnclear class="mb-2">
-                    注意：本活动每个档位的具体要求并未确定，目前只是编出来占位的。
-                </FlagUnclear>
+                <FlagUnclear class="mb-2"> 注意：本活动每个档位的具体要求并未确定。 </FlagUnclear>
                 <div v-for="(control, index) in memoryGifts" :key="index" class="my-4">
                     {{ data.memoryGifts[index]!.date }}
                     {{ data.memoryGifts[index]!.details }}
@@ -1121,8 +1119,9 @@ function exportAndCopy() {
                 <div class="px-2 mt-6">
                     <PartH2 level="3"> 烤森转换器 </PartH2>
                 </div>
+                <div class="text-miku">转换时间：9/27 0:00-10/25 11:59</div>
                 <div
-                    class="bg-white/40 dark:bg-slate-800/40 p-4 sm:p-6 mb-6 rounded-2xl border border-white/50 dark:border-slate-700/50 shadow-sm flex flex-col md:flex-row gap-6 md:gap-8"
+                    class="bg-white/40 dark:bg-slate-800/40 p-4 sm:p-6 my-6 rounded-2xl border border-white/50 dark:border-slate-700/50 shadow-sm flex flex-col md:flex-row gap-6 md:gap-8"
                 >
                     <div class="flex-1 flex flex-col">
                         <div class="flex items-center font-medium p-3 mb-3 inline-block">
@@ -1221,6 +1220,9 @@ function exportAndCopy() {
                         >
                             砍树/挖矿有概率获得 30 个
                             <i class="icon-material201 shrink-0 ml-1" />
+                            <div class="text-sm text-miku">
+                                可获得时间：9/27 5:00-10/11 16:59 <b>与其他活动不同</b>
+                            </div>
                         </div>
                         <div
                             class="flex flex-row items-center mt-auto font-bold pl-2 pr-4 py-2 w-max"

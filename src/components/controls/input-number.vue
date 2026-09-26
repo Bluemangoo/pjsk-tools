@@ -104,8 +104,13 @@ const handleValidate = () => {
 watch(
     () => props.modelValue,
     (newVal) => {
-        if (parseFloat(innerStr.value) !== newVal) {
-            innerStr.value = (newVal ?? 0).toString();
+        const validVal = getNormalizedVal(newVal);
+        if (parseFloat(innerStr.value) !== validVal) {
+            innerStr.value = validVal.toString();
+        }
+        if (newVal !== validVal) {
+            emit("update:modelValue", validVal);
+            emit("change", validVal);
         }
     },
     { immediate: true }
