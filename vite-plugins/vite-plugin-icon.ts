@@ -107,6 +107,10 @@ function generateIconCSS({
         "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/material_exchange/item_expset_vs.png";
     icons["item-expset-ws"] =
         "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/material_exchange/item_expset_ws.png";
+    icons["cos-1_5an"] =
+        "https://storage.exmeaning.com/sekai-jp-assets/thumbnail/material_exchange/item_cosset_5th.png";
+    icons["furniture-1_5an"] =
+        "https://storage.exmeaning.com/sekai-cn-assets/mysekai/thumbnail/fixture/mdl_non0099_fixture_5annivobj_1.png";
 
     for (const name of ["shiho"]) {
         for (let i = 1; i <= 4; i++) {

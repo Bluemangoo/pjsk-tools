@@ -3,7 +3,7 @@
 import ContainerPageContent from "@/components/containers/container-page-content.vue";
 import PartH1 from "@/components/parts/part-h1.vue";
 import PartH2 from "@/components/parts/part-h2.vue";
-import { computed, onMounted, type Reactive, reactive, type Ref, ref, watch } from "vue";
+import { computed, onMounted, type Reactive, reactive, type Ref, ref, toRef, watch } from "vue";
 import data from "../data/1_5an/1_5an-data.ts";
 import ContainerTab from "@/components/containers/container-tab.vue";
 import CheckboxGroup from "@/components/controls/checkbox-group.vue";
@@ -14,6 +14,7 @@ import { parseCharaIcon } from "@/utils/icon.ts";
 import ButtonNormal from "@/components/controls/button-normal.vue";
 import InputTextarea from "@/components/controls/input-textarea.vue";
 import FlagUnclear from "@/components/shorten/flag-unclear.vue";
+import { CountMaxGuard } from "@/utils/count-max.ts";
 
 // vars
 const preSignDays = ref(0);
@@ -131,7 +132,8 @@ const medalExchange = reactive(
     })()
 );
 const settings = reactive({
-    showMedalExchangeSet: false
+    showMedalExchangeSet: false,
+    limitExchangeGlobally: false
 });
 
 // import and export
@@ -166,6 +168,7 @@ function clear() {
     }
 
     settings.showMedalExchangeSet = false;
+    settings.limitExchangeGlobally = false;
 }
 function exportTo(): string {
     const filterExchange = (
@@ -270,6 +273,7 @@ function importFrom(dataStr: string) {
     }
 
     settings.showMedalExchangeSet = Boolean(importData?.settings?.showMedalExchangeSet);
+    settings.limitExchangeGlobally = Boolean(importData?.settings?.limitExchangeGlobally);
 }
 onMounted(() => {
     const savedData = localStorage.getItem("1_5an-collection");
@@ -938,6 +942,13 @@ async function autoFill() {
     }
 }
 
+// exchange guard
+const limitExchangeGlobally = toRef(settings, "limitExchangeGlobally");
+const redGuard = new CountMaxGuard(redUsedCount, redGotCount, limitExchangeGlobally);
+const blueGuard = new CountMaxGuard(blueUsedCount, blueGotCount, limitExchangeGlobally);
+const purpleGuard = new CountMaxGuard(purpleUsedCount, purpleGotCount, limitExchangeGlobally);
+const rainbowGuard = new CountMaxGuard(rainbowUsedCount, rainbowGotCount, limitExchangeGlobally);
+
 // import export controls
 const importText = ref("");
 const importStat = ref<boolean>();
@@ -1317,9 +1328,9 @@ function exportAndCopy() {
                             获取量小于消耗量！
                         </div>
                     </div>
-                    <div class="flex flex-wrap gap-3">
+                    <div class="flex flex-wrap gap-3 mt-2 lg:mb-4">
                         <div
-                            class="mt-2 lg:mb-8 bg-white/40 dark:bg-slate-800/40 p-4 rounded-xl border border-white/50 dark:border-slate-700/50 text-slate-700 dark:text-slate-200 font-medium shadow-sm flex flex-wrap items-center gap-y-2 w-full sm:w-max mx-auto sm:mx-0"
+                            class="bg-white/40 dark:bg-slate-800/40 p-4 rounded-xl border border-white/50 dark:border-slate-700/50 text-slate-700 dark:text-slate-200 font-medium shadow-sm flex flex-wrap items-center gap-y-2 w-full sm:w-max mx-auto sm:mx-0"
                         >
                             <span class="mr-2">共获得</span>
                             <span class="text-miku text-lg mx-1 sm:mx-2">{{ redGotCount }}</span>
@@ -1331,7 +1342,7 @@ function exportAndCopy() {
                             <i class="icon-material200 drop-shadow-sm" />
                         </div>
                         <div
-                            class="mt-2 lg:mb-8 bg-white/40 dark:bg-slate-800/40 p-4 rounded-xl border border-white/50 dark:border-slate-700/50 text-slate-700 dark:text-slate-200 font-medium shadow-sm flex flex-wrap items-center gap-y-2 w-full sm:w-max mx-auto sm:mx-0"
+                            class="bg-white/40 dark:bg-slate-800/40 p-4 rounded-xl border border-white/50 dark:border-slate-700/50 text-slate-700 dark:text-slate-200 font-medium shadow-sm flex flex-wrap items-center gap-y-2 w-full sm:w-max mx-auto sm:mx-0"
                         >
                             <span class="mr-2">共获得</span>
                             <span class="text-miku text-lg mx-1 sm:mx-2">{{ blueGotCount }}</span>
@@ -1343,7 +1354,7 @@ function exportAndCopy() {
                             <i class="icon-material201 drop-shadow-sm" />
                         </div>
                         <div
-                            class="mt-2 lg:mb-8 bg-white/40 dark:bg-slate-800/40 p-4 rounded-xl border border-white/50 dark:border-slate-700/50 text-slate-700 dark:text-slate-200 font-medium shadow-sm flex flex-wrap items-center gap-y-2 w-full sm:w-max mx-auto sm:mx-0"
+                            class="bg-white/40 dark:bg-slate-800/40 p-4 rounded-xl border border-white/50 dark:border-slate-700/50 text-slate-700 dark:text-slate-200 font-medium shadow-sm flex flex-wrap items-center gap-y-2 w-full sm:w-max mx-auto sm:mx-0"
                         >
                             <span class="mr-2">共获得</span>
                             <span class="text-miku text-lg mx-1 sm:mx-2">{{ purpleGotCount }}</span>
@@ -1355,7 +1366,7 @@ function exportAndCopy() {
                             <i class="icon-material202 drop-shadow-sm" />
                         </div>
                         <div
-                            class="mt-2 mb-8 bg-white/40 dark:bg-slate-800/40 p-4 rounded-xl border border-white/50 dark:border-slate-700/50 text-slate-700 dark:text-slate-200 font-medium shadow-sm flex flex-wrap items-center gap-y-2 w-full sm:w-max mx-auto sm:mx-0"
+                            class="bg-white/40 dark:bg-slate-800/40 p-4 rounded-xl border border-white/50 dark:border-slate-700/50 text-slate-700 dark:text-slate-200 font-medium shadow-sm flex flex-wrap items-center gap-y-2 w-full sm:w-max mx-auto sm:mx-0"
                         >
                             <span class="mr-2">共获得</span>
                             <span class="text-miku text-lg mx-1 sm:mx-2">{{
@@ -1369,21 +1380,44 @@ function exportAndCopy() {
                             <i class="icon-material203 drop-shadow-sm" />
                         </div>
                     </div>
-                    <ButtonNormal class="w-max px-4 py-2" type="secondary" @click="autoFill"
-                        >自动补足所需资源</ButtonNormal
-                    >
+                    <div class="flex flex-nowrap lg:flex-row flex-col gap-4">
+                        <div class="flex h-10">
+                            <div class="flex flex-nowrap mt-4 lg:my-auto">
+                                阻止消耗超过获取量
+                                <CheckboxSwitch
+                                    v-model="settings.limitExchangeGlobally"
+                                    class="h-6 w-12 ml-3"
+                                />
+                            </div>
+                        </div>
+                        <div v-if="!settings.limitExchangeGlobally" class="flex h-10 py-1">
+                            <ButtonNormal
+                                class="text-sm w-max px-3 py-1.5 border!"
+                                type="secondary"
+                                @click="autoFill"
+                                >自动补足所需资源</ButtonNormal
+                            >
+                        </div>
+                    </div>
 
                     <div class="flex flex-wrap justify-center sm:justify-start gap-4 sm:gap-5 mt-6">
                         <button
                             v-for="(item, key) in data.redExchange"
                             :key="key"
-                            class="flex flex-col items-center justify-center p-3 gap-2 rounded-2xl border-2 transition-all duration-300 active:scale-95 min-w-36 overflow-hidden shadow-sm"
+                            class="flex flex-col items-center justify-center p-3 gap-2 rounded-2xl border-2 transition-all duration-300 active:scale-95 disabled:scale-100 min-w-36 overflow-hidden shadow-sm"
                             :class="
                                 redExchange[key]! > 0
                                     ? 'border-miku bg-miku/10 dark:bg-miku/20 shadow-[0_4px_15px_rgba(51,204,187,0.15)]'
-                                    : 'bg-white/40 dark:bg-slate-800/40 border-zinc-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:border-miku/50 dark:hover:border-miku/60'
+                                    : 'bg-white/40 dark:bg-slate-800/40 border-zinc-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 enabled:hover:border-miku/50 dark:enabled:hover:border-miku/60'
                             "
-                            @click="redExchange[key]!++"
+                            :disabled="
+                                redExchange[key]! >= data.redExchange[key]!.limit ||
+                                !redGuard.check(data.redExchange[key]!.expense).value
+                            "
+                            @click="
+                                redGuard.check(data.redExchange[key]!.expense).value &&
+                                redExchange[key]!++
+                            "
                         >
                             <div class="relative drop-shadow-md">
                                 <div>
@@ -1418,6 +1452,7 @@ function exportAndCopy() {
                                     v-model="redExchange[key]!"
                                     :min="0"
                                     :max="data.redExchange[key]!.limit"
+                                    :max-guard="redGuard.withRate(data.redExchange[key]!.expense)"
                                     @click.stop
                                 />
                             </div>
@@ -1435,13 +1470,20 @@ function exportAndCopy() {
                         <button
                             v-for="(item, key) in data.blueExchange"
                             :key="key"
-                            class="flex flex-col items-center justify-center p-3 gap-2 rounded-2xl border-2 transition-all duration-300 active:scale-95 min-w-36 overflow-hidden shadow-sm"
+                            class="flex flex-col items-center justify-center p-3 gap-2 rounded-2xl border-2 transition-all duration-300 active:scale-95 disabled:scale-100 min-w-36 overflow-hidden shadow-sm"
                             :class="
                                 blueExchange[key]! > 0
                                     ? 'border-miku bg-miku/10 dark:bg-miku/20 shadow-[0_4px_15px_rgba(51,204,187,0.15)]'
-                                    : 'bg-white/40 dark:bg-slate-800/40 border-zinc-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:border-miku/50 dark:hover:border-miku/60'
+                                    : 'bg-white/40 dark:bg-slate-800/40 border-zinc-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 enabled:hover:border-miku/50 dark:enabled:hover:border-miku/60'
                             "
-                            @click="blueExchange[key]!++"
+                            :disabled="
+                                blueExchange[key]! >= data.blueExchange[key]!.limit ||
+                                !blueGuard.check(data.blueExchange[key]!.expense).value
+                            "
+                            @click="
+                                blueGuard.check(data.blueExchange[key]!.expense).value &&
+                                blueExchange[key]!++
+                            "
                         >
                             <div class="relative drop-shadow-md">
                                 <div>
@@ -1476,6 +1518,7 @@ function exportAndCopy() {
                                     v-model="blueExchange[key]!"
                                     :min="0"
                                     :max="data.blueExchange[key]!.limit"
+                                    :max-guard="blueGuard.withRate(data.blueExchange[key]!.expense)"
                                     @click.stop
                                 />
                             </div>
@@ -1493,13 +1536,20 @@ function exportAndCopy() {
                         <button
                             v-for="(item, key) in data.purpleExchange"
                             :key="key"
-                            class="flex flex-col items-center justify-center p-3 gap-2 rounded-2xl border-2 transition-all duration-300 active:scale-95 min-w-36 overflow-hidden shadow-sm"
+                            class="flex flex-col items-center justify-center p-3 gap-2 rounded-2xl border-2 transition-all duration-300 active:scale-95 disabled:scale-100 min-w-36 overflow-hidden shadow-sm"
                             :class="
                                 purpleExchange[key]! > 0
                                     ? 'border-miku bg-miku/10 dark:bg-miku/20 shadow-[0_4px_15px_rgba(51,204,187,0.15)]'
-                                    : 'bg-white/40 dark:bg-slate-800/40 border-zinc-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:border-miku/50 dark:hover:border-miku/60'
+                                    : 'bg-white/40 dark:bg-slate-800/40 border-zinc-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 enabled:hover:border-miku/50 dark:enabled:hover:border-miku/60'
                             "
-                            @click="purpleExchange[key]!++"
+                            :disabled="
+                                purpleExchange[key]! >= data.purpleExchange[key]!.limit ||
+                                !purpleGuard.check(data.purpleExchange[key]!.expense).value
+                            "
+                            @click="
+                                purpleGuard.check(data.purpleExchange[key]!.expense).value &&
+                                purpleExchange[key]!++
+                            "
                         >
                             <div class="relative drop-shadow-md">
                                 <div>
@@ -1534,6 +1584,9 @@ function exportAndCopy() {
                                     v-model="purpleExchange[key]!"
                                     :min="0"
                                     :max="data.purpleExchange[key]!.limit"
+                                    :max-guard="
+                                        purpleGuard.withRate(data.purpleExchange[key]!.expense)
+                                    "
                                     @click.stop
                                 />
                             </div>
@@ -1551,13 +1604,20 @@ function exportAndCopy() {
                         <button
                             v-for="(item, key) in data.rainbowExchange"
                             :key="key"
-                            class="flex flex-col items-center justify-center p-3 gap-2 rounded-2xl border-2 transition-all duration-300 active:scale-95 min-w-36 overflow-hidden shadow-sm"
+                            class="flex flex-col items-center justify-center p-3 gap-2 rounded-2xl border-2 transition-all duration-300 active:scale-95 disabled:scale-100 min-w-36 overflow-hidden shadow-sm"
                             :class="
                                 rainbowExchange[key]! > 0
                                     ? 'border-miku bg-miku/10 dark:bg-miku/20 shadow-[0_4px_15px_rgba(51,204,187,0.15)]'
-                                    : 'bg-white/40 dark:bg-slate-800/40 border-zinc-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:border-miku/50 dark:hover:border-miku/60'
+                                    : 'bg-white/40 dark:bg-slate-800/40 border-zinc-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 enabled:hover:border-miku/50 dark:enabled:hover:border-miku/60'
                             "
-                            @click="rainbowExchange[key]!++"
+                            :disabled="
+                                rainbowExchange[key]! >= data.rainbowExchange[key]!.limit ||
+                                !rainbowGuard.check(data.rainbowExchange[key]!.expense).value
+                            "
+                            @click="
+                                rainbowGuard.check(data.rainbowExchange[key]!.expense).value &&
+                                rainbowExchange[key]!++
+                            "
                         >
                             <div class="relative drop-shadow-md">
                                 <div>
@@ -1593,6 +1653,9 @@ function exportAndCopy() {
                                     v-model="rainbowExchange[key]!"
                                     :min="0"
                                     :max="data.rainbowExchange[key]!.limit"
+                                    :max-guard="
+                                        rainbowGuard.withRate(data.rainbowExchange[key]!.expense)
+                                    "
                                     @click.stop
                                 />
                             </div>
@@ -1906,21 +1969,6 @@ function exportAndCopy() {
     </ContainerPageContent>
     <!-- 给底部留出滑动空间 -->
     <div class="h-30" />
-    <!--    <div-->
-    <!--        class="fixed right-6 size-20 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md flex items-center justify-center text-slate-800 dark:text-slate-100 text-2xl z-50 rounded-full shadow-lg border border-white/50 dark:border-slate-700/50 cursor-pointer transition duration-300 hover:scale-105 hover:shadow-xl hover:shadow-miku/30 dark:hover:shadow-miku/20 active:scale-95 group"-->
-    <!--        :style="`bottom: calc(var(&#45;&#45;spacing) * 6 + ${footerOverlapHeight}px)`"-->
-    <!--    >-->
-    <!--        <div-->
-    <!--            class="absolute inset-0 rounded-full bg-linear-to-tr from-miku/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"-->
-    <!--        ></div>-->
-    <!--        <i-->
-    <!--            class="icon-material-bare170 size-24 drop-shadow-sm group-hover:drop-shadow-[0_0_8px_rgba(51,204,187,0.5)] transition-all duration-300 relative z-10"-->
-    <!--        />-->
-    <!--        <span-->
-    <!--            class="absolute right-0 bottom-0 min-w-8 h-6 px-2 bg-miku text-white rounded-full text-xs font-bold flex items-center justify-center shadow-md border-2 border-white dark:border-slate-800 z-20"-->
-    <!--            >{{ pCountFormatted }}</span-->
-    <!--        >-->
-    <!--    </div>-->
 </template>
 
 <style scoped>

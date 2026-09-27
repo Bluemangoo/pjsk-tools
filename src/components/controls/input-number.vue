@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, watch, computed } from "vue";
+import type { SubCountMaxGuard } from "@/utils/count-max.ts";
 
 interface Props {
     modelValue: number;
@@ -9,6 +10,7 @@ interface Props {
     precision?: number;
     disabled?: boolean;
     placeholder?: string;
+    maxGuard?: SubCountMaxGuard;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -32,6 +34,7 @@ const filterInvalid = (val: string) => {
 const isValid = (num: number, rawStr: string) => {
     if (isNaN(num) || rawStr === "" || rawStr === "-" || rawStr.endsWith(".")) return false;
     if (num < props.min || num > props.max) return false;
+    if (props?.maxGuard?.check(num - props.modelValue).value === false) return false;
 
     const parts = rawStr.split(".");
     if (parts.length > 1 && parts[1]!.length > props.precision) return false;
@@ -41,10 +44,14 @@ const isValid = (num: number, rawStr: string) => {
     return Math.abs(ratio - Math.round(ratio)) < 1e-9;
 };
 
-const getNormalizedVal = (val?: number): number => {
+const getNormalizedVal = (val?: number, ignoreMaxGuard?: boolean): number => {
     let num = typeof val === "number" ? val : parseFloat(innerStr.value);
     if (isNaN(num)) num = 0;
-
+    if (props.maxGuard && !ignoreMaxGuard) {
+        let diff = num - props.modelValue;
+        diff = Math.min(diff, props.maxGuard.diff().value);
+        num = props.modelValue + diff;
+    }
     num = Math.max(props.min, Math.min(props.max, num));
 
     const base = isFinite(props.min) ? props.min : 0;
@@ -104,7 +111,7 @@ const handleValidate = () => {
 watch(
     () => props.modelValue,
     (newVal) => {
-        const validVal = getNormalizedVal(newVal);
+        const validVal = getNormalizedVal(newVal, true);
         if (parseFloat(innerStr.value) !== validVal) {
             innerStr.value = validVal.toString();
         }
@@ -127,6 +134,7 @@ const changeStep = (delta: number) => {
 
 const isMin = computed(() => (parseFloat(innerStr.value) || 0) <= props.min);
 const isMax = computed(() => (parseFloat(innerStr.value) || 0) >= props.max);
+const isGlobalMax = computed(() => props.maxGuard?.check?.(props.step || 1).value === false);
 </script>
 
 <template>
@@ -164,7 +172,7 @@ const isMax = computed(() => (parseFloat(innerStr.value) || 0) >= props.max);
         <button
             type="button"
             @click="changeStep(step || 1)"
-            :disabled="disabled || isMax"
+            :disabled="disabled || isMax || isGlobalMax"
             class="flex h-full aspect-square p-[1%] rounded-full transition-all text-miku-dark dark:text-miku hover:bg-miku hover:text-white active:scale-90 disabled:opacity-20 select-none cursor-pointer items-center justify-center"
         >
             <i class="icon-plus size-full m-0"></i>

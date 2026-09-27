@@ -492,7 +492,7 @@ const blueExchange = {
         count: 1,
         expense: 500,
         limit: 1,
-        icon: "icon-text-['家具占位']"
+        icon: "icon-furniture-1_5an"
     },
     blueprint: {
         count: 1,
@@ -525,7 +525,7 @@ const purpleExchange = {
         count: 1,
         expense: 300,
         limit: 1,
-        icon: "icon-text-['服装占位']"
+        icon: "icon-cos-1_5an"
     },
     heartcrystal: {
         count: 1,
